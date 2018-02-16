@@ -86,7 +86,7 @@ void displayIP(int sockfd)
 
 	printf("\tServer Information\t\n");
 	printf("=========================\n");
-	printf("Server IP:\t%s\n", inet_ntoa(sock_ptr->sin_addr));
-	printf("Server Port:\t%d\n", (int)ntohs(sock_ptr->sin_port));
+
+	printf("Server Port:\t%u\n", ntohs(sock_ptr->sin_port));
 	printf("Server Hostname:\t%s\n", ipAddress);
 }
