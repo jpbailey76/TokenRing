@@ -75,7 +75,7 @@ int createServer()
 
 char* getIP(int sockfd)
 {
-	//char ipAddress[INET_ADDRSTRLEN];
+	char ipAddress[INET_ADDRSTRLEN];
 	struct sockaddr sock;
 	struct sockaddr_in *sock_ptr = (struct sockaddr_in *) &sock;
 	socklen_t sock_len;
@@ -89,6 +89,8 @@ char* getIP(int sockfd)
 
 	printf("IP address is: %s\n", inet_ntoa(sock_ptr->sin_addr));
 	printf("Port is: %d\n", (int)ntohs(sock_ptr->sin_port));
+	gethostname(ipAddress, INET_ADDRSTRLEN);
+	printf("Hostname is: %s\n", ipAddress);
 
 	return inet_ntoa(sock_ptr->sin_addr);
 }
