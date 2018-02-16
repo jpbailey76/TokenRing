@@ -4,5 +4,8 @@
 
 int createServer();
 
+char* getIP(int sockfd);
+
+
 
 #endif // BBSERVER_H_
