@@ -62,18 +62,14 @@ int createServer()
 	/*
 	*	Display server information after creation.
 	*/
-	char *serverIP = getIP(sockfd);
-
-	printf("\tServer IP\t\n");
-	printf("=========================\n");
-	printf("%s\n", serverIP);
+	displayIP(sockfd);
 
 	freeaddrinfo(serverInfo);
 
 	return status;
 }
 
-char* getIP(int sockfd)
+void displayIP(int sockfd)
 {
 	char ipAddress[INET_ADDRSTRLEN];
 	struct sockaddr sock;
@@ -81,16 +77,16 @@ char* getIP(int sockfd)
 	socklen_t sock_len;
 
 	sock_len = sizeof(sock_ptr);
-	//if (getpeername(sockfd, &sock, &sock_len) == -1)
-	//{
-	//	perror("Server Error: getpeername() failed.\n");
-	//	return "BROKEN";
-	//}
-
-	printf("IP address is: %s\n", inet_ntoa(sock_ptr->sin_addr));
-	printf("Port is: %d\n", (int)ntohs(sock_ptr->sin_port));
+	if (getpeername(sockfd, &sock, &sock_len) == -1)
+	{
+		perror("Server Error: getpeername() failed.\n");
+		return "BROKEN";
+	}
 	gethostname(ipAddress, INET_ADDRSTRLEN);
-	printf("Hostname is: %s\n", ipAddress);
 
-	return inet_ntoa(sock_ptr->sin_addr);
+	printf("\tServer Information\t\n");
+	printf("=========================\n");
+	printf("Server IP:\t%s\n", inet_ntoa(sock_ptr->sin_addr));
+	printf("Server Port:\t%d\n", (int)ntohs(sock_ptr->sin_port));
+	printf("Server Hostname:\t%s\n", ipAddress);
 }

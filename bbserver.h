@@ -4,7 +4,7 @@
 
 int createServer();
 
-char* getIP(int sockfd);
+void displayIP(int sockfd);
 
 
 
