@@ -81,11 +81,11 @@ char* getIP(int sockfd)
 	socklen_t sock_len;
 
 	sock_len = sizeof(sock_ptr);
-	if (getpeername(sockfd, &sock, &sock_len) == -1)
-	{
-		perror("Server Error: getpeername() failed.\n");
-		return "BROKEN";
-	}
+	//if (getpeername(sockfd, &sock, &sock_len) == -1)
+	//{
+	//	perror("Server Error: getpeername() failed.\n");
+	//	return "BROKEN";
+	//}
 
 	printf("IP address is: %s\n", inet_ntoa(sock_ptr->sin_addr));
 	printf("Port is: %d\n", (int)ntohs(sock_ptr->sin_port));
