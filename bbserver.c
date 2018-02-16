@@ -58,43 +58,27 @@ int createServer()
 		return ERROR;
 	}
 
-
 	/*
 	*	Display server information after creation.
 	*/
-	displayIP(sockfd);
+	char hostName[BUFFER_SIZE];
+	gethostname(hostName, BUFFER_SIZE - 1);
+	printf("\tServer Information\t\n");
+	printf("=========================\n");
+	printf("Server Hostname:\t%s\n", hostName);
+	printf("Server Port:\t%d\n", ntohs(getPort((struct sockaddr *)serverInfo->ai_addr)));
 
 	freeaddrinfo(serverInfo);
 
 	return status;
 }
 
-void displayIP(int sockfd)
+
+in_port_t getPort(struct sockaddr *sa)
 {
-	char ipAddress[INET_ADDRSTRLEN];
-	struct sockaddr sock;
-	struct sockaddr_in sock_inet;
-
-	//struct sockaddr_in *sock_ptr = (struct sockaddr_in *) &sock;
-	socklen_t sock_len;
-
-	sock_len = sizeof(sock_inet);
-	int result = getpeername(sockfd, (struct sock_inet *)&sock_inet, &sock_len);
-	if (result == 0)
-	{
-		printf("Peer Name: %s", inet_ntoa((in_addr)(*(in_addr*)&sock_inet.sin_addr.S_un.S_addr)) /*inet_ntoa(sock_ptr->sin_addr)*/);
-
+	if (sa->sa_family == AF_INET) {
+		return (((struct sockaddr_in*)sa)->sin_port);
 	}
-	else
-	{
-		perror("Server Error: getpeername() failed.\n");
-		exit(EXIT_FAILURE);
-	}
-	gethostname(ipAddress, INET_ADDRSTRLEN);
 
-	printf("\tServer Information\t\n");
-	printf("=========================\n");
-
-	printf("Server Port:\t%u\n", ntohs(sock_ptr->sin_port));
-	printf("Server Hostname:\t%s\n", ipAddress);
+	return (((struct sockaddr_in6*)sa)->sin6_port);
 }
