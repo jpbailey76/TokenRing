@@ -43,8 +43,8 @@ int createServer()
 	}
 
 	// Make the socket
-	if ((sockfd = socket(serverInfo->ai_family, serverInfo->ai_socktype, serverInfo->ai_protocol)
-		== -1))
+	sockfd = socket(serverInfo->ai_family, serverInfo->ai_socktype, serverInfo->ai_protocol);
+	if (sockfd == -1)
 	{
 		perror("Server Error: Socket creation failed.\n");
 		return ERROR;
