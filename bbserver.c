@@ -64,6 +64,10 @@ int createServer()
 	*/
 	char *serverIP = getIP(sockfd);
 
+	printf("\tServer IP\t\n");
+	printf("=========================\n");
+	printf("%s\n", &serverIP);
+
 	freeaddrinfo(serverInfo);
 
 	return status;
