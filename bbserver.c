@@ -80,7 +80,7 @@ void displayIP(int sockfd)
 	if (getpeername(sockfd, &sock, &sock_len) == -1)
 	{
 		perror("Server Error: getpeername() failed.\n");
-		return "BROKEN";
+		exit(EXIT_FAILURE);
 	}
 	gethostname(ipAddress, INET_ADDRSTRLEN);
 
