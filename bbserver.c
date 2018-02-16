@@ -79,10 +79,10 @@ void displayIP(int sockfd)
 	socklen_t sock_len;
 
 	sock_len = sizeof(sock_inet);
-	int result = getpeername(sockfd, (struct sockaddr *)&sock_inet, &sock_len);
+	int result = getpeername(sockfd, (struct sock_inet *)&sock_inet, &sock_len);
 	if (result == 0)
 	{
-		printf("Peer Name: %s", inet_ntoa(sock_ptr->sin_addr));
+		printf("Peer Name: %s", inet_ntoa((in_addr)(*(in_addr*)&sock_inet.sin_addr.S_un.S_addr)) /*inet_ntoa(sock_ptr->sin_addr)*/);
 
 	}
 	else
