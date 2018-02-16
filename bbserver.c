@@ -72,12 +72,14 @@ int createServer()
 void displayIP(int sockfd)
 {
 	char ipAddress[INET_ADDRSTRLEN];
-	struct sockaddr sock;
-	struct sockaddr_in *sock_ptr = (struct sockaddr_in *) &sock;
+	struct sockaddr sock
+	struct sockaddr_in sock_inet;
+
+	//struct sockaddr_in *sock_ptr = (struct sockaddr_in *) &sock;
 	socklen_t sock_len;
 
-	sock_len = sizeof(sock_ptr);
-	int result = getpeername(sockfd, &sock, &sock_len);
+	sock_len = sizeof(sock_inet);
+	int result = getpeername(sockfd, (struct sockaddr *)&sock_inet, &sock_len);
 	if (result == 0)
 	{
 		printf("Peer Name: %s", inet_ntoa(sock_ptr->sin_addr));
