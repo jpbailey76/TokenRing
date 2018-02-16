@@ -73,11 +73,11 @@ char* getIP(int sockfd)
 {
 	char ipAddress[INET_ADDRSTRLEN];
 	struct sockaddr sock;
-	struct sockaddr_in *sock_ptr = (struct sockaddr_in *) &clientInfo;
-	int sock_len;
+	struct sockaddr_in *sock_ptr = (struct sockaddr_in *) &sock;
+	socklen_t sock_len;
 
 	sock_len = sizeof(sock_ptr);
-	if (getpeername(sock_fd, &clientInfo, &sock_len) == -1)
+	if (getpeername(sockfd, &sock, &sock_len) == -1)
 	{
 		perror("Server Error: getpeername() failed.\n");
 		return -1;
@@ -86,5 +86,5 @@ char* getIP(int sockfd)
 	printf("IP address is: %s\n", inet_ntoa(sock_ptr->sin_addr));
 	printf("Port is: %d\n", (int)ntohs(sock_ptr->sin_port));
 
-	return sock_ptr->sin_addr;
+	return inet_ntoa(sock_ptr->sin_addr);
 }
