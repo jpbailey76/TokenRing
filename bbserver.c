@@ -77,7 +77,13 @@ void displayIP(int sockfd)
 	socklen_t sock_len;
 
 	sock_len = sizeof(sock_ptr);
-	if (getpeername(sockfd, &sock, &sock_len) == -1)
+	int result = getpeername(sockfd, &sock, &sock_len);
+	if (result == o)
+	{
+		printf("Peer Name: %s", inet_ntoa(sock.sin_addr));
+
+	}
+	else
 	{
 		perror("Server Error: getpeername() failed.\n");
 		exit(EXIT_FAILURE);
