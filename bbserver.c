@@ -72,7 +72,7 @@ int createServer()
 void displayIP(int sockfd)
 {
 	char ipAddress[INET_ADDRSTRLEN];
-	struct sockaddr sock
+	struct sockaddr sock;
 	struct sockaddr_in sock_inet;
 
 	//struct sockaddr_in *sock_ptr = (struct sockaddr_in *) &sock;
