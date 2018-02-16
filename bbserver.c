@@ -66,7 +66,7 @@ int createServer()
 
 	printf("\tServer IP\t\n");
 	printf("=========================\n");
-	printf("%s\n", &serverIP);
+	printf("%s\n", serverIP);
 
 	freeaddrinfo(serverInfo);
 
@@ -75,7 +75,7 @@ int createServer()
 
 char* getIP(int sockfd)
 {
-	char ipAddress[INET_ADDRSTRLEN];
+	//char ipAddress[INET_ADDRSTRLEN];
 	struct sockaddr sock;
 	struct sockaddr_in *sock_ptr = (struct sockaddr_in *) &sock;
 	socklen_t sock_len;
