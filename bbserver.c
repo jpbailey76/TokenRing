@@ -63,10 +63,10 @@ int createServer()
 	*/
 	char hostName[BUFFER_SIZE];
 	gethostname(hostName, BUFFER_SIZE - 1);
-	printf("   Server Information   \n");
-	printf("========================\n");
+	printf("        Server Information        \n");
+	printf("==================================\n");
 	printf("Host Address:\t %s\n", hostName);
-	printf("Port\t:\t %d\n", ntohs(getPort((struct sockaddr *)serverInfo->ai_addr)));
+	printf("Port\t\t:\t %d\n", ntohs(getPort((struct sockaddr *)serverInfo->ai_addr)));
 
 	freeaddrinfo(serverInfo);
 
