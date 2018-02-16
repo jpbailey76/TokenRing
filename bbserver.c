@@ -58,9 +58,7 @@ int createServer()
 		return ERROR;
 	}
 
-	/*
-	*	Display server information after creation.
-	*/
+	// Display server information
 	char hostName[BUFFER_SIZE];
 	gethostname(hostName, BUFFER_SIZE - 1);
 	printf("        Server Information        \n");
