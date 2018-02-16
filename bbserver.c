@@ -80,7 +80,7 @@ void displayIP(int sockfd)
 	int result = getpeername(sockfd, &sock, &sock_len);
 	if (result == 0)
 	{
-		printf("Peer Name: %s", inet_ntoa(sock.sin_addr));
+		printf("Peer Name: %s", inet_ntoa(sock_ptr->sin_addr));
 
 	}
 	else
