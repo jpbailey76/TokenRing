@@ -96,13 +96,15 @@ void runServer(int _sockfd, int _numClients)
 	char buffer[BUFFER_SIZE];
 	char ipBuffer[INET6_ADDRSTRLEN];
 	struct sockaddr_storage clientAddr[_numClients];
+	socklen_t addr_len;
 	int numBytes;
 
 	int i = 0;
 	for(i = 0; i < _numClients; i++)
 	{
+		addr_len = sizeof(clientAddr);
 		if ((numBytes = recvfrom(_sockfd, buffer, sizeof(buffer), 0, 
-						(struct sockaddr*)&clientAddr[i], sizeof(clientAddr))) == -1)
+						(struct sockaddr*)&clientAddr[i], addr_len)) == -1)
 		{
 			perror("Server Error: recvfrom() failed.\n");
 			exit(1);
