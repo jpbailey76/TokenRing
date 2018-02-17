@@ -23,11 +23,9 @@ int main(int argc, char **argv)
 	if((sockfd = createServer()) == ERROR)
 		exit(EXIT_FAILURE);
 
-	printf("Press any key to run the server.\n");
-	char input = getchar();
 	runServer(sockfd, numHosts);
 
-	printf("Program completed\n");
+	printf("Server Closed.\n");
 	return 0;
 }
 
