@@ -108,8 +108,9 @@ void runServer(int _sockfd, int _numClients)
 	for(i = 0; i < _numClients; i++)
 	{
 		addr_len = sizeof(clientAddr);
-		if ((numBytes = recvfrom(_sockfd, buffer, sizeof(buffer), 0, 
-						(struct sockaddr*)&clientAddr[i], &addr_len)) == -1)
+		numBytes = recvfrom(_sockfd, buffer, sizeof(buffer), 0,
+			       (struct sockaddr*)&clientAddr[i], &addr_len);
+		if (numBytes == -1)
 		{
 			perror("Server Error: recvfrom() failed.\n");
 			exit(1);
