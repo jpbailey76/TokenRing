@@ -96,7 +96,6 @@ void runServer(int _sockfd, int _numClients)
 	char buffer[BUFFER_SIZE];
 	char ipBuffer[INET6_ADDRSTRLEN];
 	struct sockaddr_storage clientAddr[_numClients];
-	struct sockaddr_in *sock_ptr[_numClients];
 	int numBytes;
 
 	int i = 0;
@@ -112,7 +111,7 @@ void runServer(int _sockfd, int _numClients)
 							  get_in_addr((struct sockaddr*)&clientAddr[i]), 
 							  ipBuffer, 
 							  sizeof(ipBuffer));
-		printf("A host from %s has connected with: \t%s\t\n", i + 1, ipAddressBuf, buffer);
+		printf("A host from %s has connected with: \t%s\t\n", i + 1, ipBuffer, buffer);
 	}
 
 	close(_sockfd);
