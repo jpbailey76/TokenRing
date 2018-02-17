@@ -102,7 +102,7 @@ void runServer(int _sockfd, int _numClients)
 	int i = 0;
 	for(i = 0; i < _numClients; i++)
 	{
-		addr_len = sizeof(clientAddr);
+		addr_len = sizeof(clientAddr[i]);
 		if ((numBytes = recvfrom(_sockfd, buffer, sizeof(buffer), 0, 
 						(struct sockaddr*)&clientAddr[i], addr_len)) == -1)
 		{
