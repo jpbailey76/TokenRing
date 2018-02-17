@@ -18,9 +18,14 @@
 int main(int argc, char **argv) 
 {
 	int sockfd;
+	int numHosts = 4;
 
 	if((sockfd = createServer()) == ERROR)
 		exit(EXIT_FAILURE);
+
+	printf("Press any key to run the server.\n");
+	getch();
+	runServer(sockfd, numHosts);
 
 	printf("Program completed\n");
 	return 0;
