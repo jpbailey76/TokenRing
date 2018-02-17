@@ -114,7 +114,7 @@ void runServer(int _sockfd, int _numClients)
 							  get_in_addr((struct sockaddr*)&clientAddr[i]), 
 							  ipBuffer, 
 							  sizeof(ipBuffer));
-		printf("A host from %s has connected with: \t%s\t\n", i + 1, ipBuffer, buffer);
+		printf("A host from %s has connected with: \t%s\t\n", ipAddress, buffer);
 	}
 
 	close(_sockfd);
