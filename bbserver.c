@@ -18,12 +18,12 @@
 int main(int argc, char **argv) 
 {
 	int sockfd;
-	int numHosts = 4;
+	if (argc != 2)
+		perror("Input Error: Anticipated input --> ./bbserver <# of hosts>\n");
 
-	if((sockfd = createServer()) == ERROR)
+	if ((sockfd = createServer()) == ERROR)
 		exit(EXIT_FAILURE);
-
-	runServer(sockfd, numHosts);
+	runServer(sockfd, atoi(argv[1]));
 
 	printf("Server Closed.\n");
 	return 0;
