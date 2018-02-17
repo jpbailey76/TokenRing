@@ -109,6 +109,7 @@ void runServer(int _sockfd, int _numClients)
 	int i = 0;
 	for(i = 0; i < _numClients; i++)
 	{
+		printf("Waiting for a connection...\n");
 		addr_len = sizeof(clientAddr);
 		numBytes = recvfrom(_sockfd, buffer, sizeof(buffer), 0,
 			       (struct sockaddr*)&clientAddr[i], &addr_len);
