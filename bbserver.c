@@ -24,7 +24,7 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 
 	printf("Press any key to run the server.\n");
-	getch();
+	char input = getchar();
 	runServer(sockfd, numHosts);
 
 	printf("Program completed\n");
