@@ -33,7 +33,7 @@ int createServer()
 
 	memset(&hints, 0, sizeof hints); // make sure the struct is empty
 	hints.ai_family = AF_UNSPEC;     // IPv4 or IPv6
-	hints.ai_socktype = SOCK_STREAM; // TCP stream sockets
+	hints.ai_socktype = SOCK_DGRAM;  // UDP sockets
 	hints.ai_flags = AI_PASSIVE;     // fill in my IP for me
 
 	if ((status = getaddrinfo(NULL, "6969", &hints, &serverInfo)) != 0) 
@@ -72,11 +72,48 @@ int createServer()
 }
 
 
-in_port_t getPort(struct sockaddr *sa)
+void *get_in_addr(struct sockaddr *sa)
 {
-	if (sa->sa_family == AF_INET) {
-		return (((struct sockaddr_in*)sa)->sin_port);
+	if (sa->sa_family == AF_INET) 
+	{
+		return &(((struct sockaddr_in*)sa)->sin_addr);
 	}
 
-	return (((struct sockaddr_in6*)sa)->sin6_port);
+	return &(((struct sockaddr_in6*)sa)->sin6_addr);
+}
+
+in_port_t getPort(struct sockaddr *_sa)
+{
+	if (_sa->sa_family == AF_INET) {
+		return (((struct sockaddr_in*)_sa)->sin_port);
+	}
+
+	return (((struct sockaddr_in6*)_sa)->sin6_port);
+}
+
+void runServer(int _sockfd, int _numClients)
+{
+	char buffer[BUFFER_SIZE];
+	char ipBuffer[INET6_ADDRSTRLEN];
+	struct sockaddr_storage clientAddr[_numClients];
+	struct sockaddr_in *sock_ptr[_numClients];
+	int numBytes;
+
+	int i = 0;
+	for(i = 0; i < _numClients; i++)
+	{
+		if ((numBytes = recvfrom(_sockfd, buffer, sizeof(buffer), 0, &clientAddr[i], sizeof(clientAddr))) == -1)
+		{
+			perror("Server Error: recvfrom() failed.\n");
+			exit(1);
+		}
+		const char *ipAddress;
+		ipAddress = inet_ntop(clientAddr[i].ss_family, 
+							  get_in_addr((struct sockaddr*)&clientAddr[i]), 
+							  ipBuffer, 
+							  sizeof(ipBuffer));
+		printf("A host from %s has connected with: \t%s\t\n", i + 1, ipAddressBuf, buffer);
+	}
+
+	close(_sockfd);
 }

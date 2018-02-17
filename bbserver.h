@@ -5,7 +5,11 @@
 
 int createServer();
 
+void *get_in_addr(struct sockaddr *sa);
+
 in_port_t getPort(struct sockaddr *sa);
+
+void runServer(int sockfd, int numHosts);
 
 
 #endif // BBSERVER_H_
