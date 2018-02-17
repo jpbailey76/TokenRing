@@ -19,7 +19,10 @@ int main(int argc, char **argv)
 {
 	int sockfd;
 	if (argc != 2)
-		perror("Input Error: Anticipated input --> ./bbserver <# of hosts>\n");
+	{
+		fprintf(stderr, "Input Error: Anticipated input --> ./bbserver <# of hosts>\n");
+		return ERROR;
+	}
 
 	if ((sockfd = createServer()) == ERROR)
 		exit(EXIT_FAILURE);
