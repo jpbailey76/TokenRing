@@ -73,7 +73,7 @@ int createServer()
 
 	freeaddrinfo(serverInfo);
 
-	return status;
+	return sockfd;
 }
 
 
