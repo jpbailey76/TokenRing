@@ -112,7 +112,8 @@ void runServer(int _sockfd, int _numClients)
 			       (struct sockaddr*)&clientAddr[i], &addr_len);
 		if (numBytes == -1)
 		{
-			perror("Server Error: recvfrom() failed. numBytes = %d\n", numBytes);
+			printf("numBytes = [%d]\n", numBytes);
+			perror("Server Error: recvfrom() failed. \n");
 			exit(1);
 		}
 		const char *ipAddress;
