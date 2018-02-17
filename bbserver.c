@@ -104,6 +104,8 @@ void runServer(int _sockfd, int _numClients)
 	socklen_t addr_len;
 	int numBytes = 0;
 
+	printf("DEBUG: sockfd = [%d] | numClients = [%d]\n", _sockfd, _numClients);
+
 	int i = 0;
 	for(i = 0; i < _numClients; i++)
 	{
