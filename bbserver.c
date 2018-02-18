@@ -139,7 +139,6 @@ void runServer(int _sockfd, int _numClients)
 		printf(YELLOW"\nA host from %s has connected with: \t%s\t\n"RESET, ipAddress, buffer);
 	}
 
-	int i = 0;
 	for (i = 0; i < _numClients; i++)
 	{
 		sendto(_sockfd, responseBuff, strlen(responseBuff), 0, &clientAddr[i], sizeof(struct sockaddr));
