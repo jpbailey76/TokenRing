@@ -14,13 +14,17 @@
 // Defines
 #define ERROR -1
 #define BUFFER_SIZE 256
+#define RED "\x1b[31m"
+#define BLUE   "\x1B[34m"
+#define YELLOW   "\x1B[33m"
+#define RESET "\x1B[0m"
 
 int main(int argc, char **argv) 
 {
 	int sockfd;
 	if (argc != 2)
 	{
-		fprintf(stderr, "Input Error: Anticipated input --> ./bbserver <# of hosts>\n");
+		fprintf(stderr, RED"Input Error: "RESET "Anticipated input --> ./bbserver <# of hosts>\n");
 		return ERROR;
 	}
 
@@ -44,7 +48,7 @@ int createServer()
 
 	if ((status = getaddrinfo(NULL, "6969", &hints, &serverInfo)) != 0) 
 	{
-		fprintf(stderr, "Server Error: getaddrinfo() error = [%s]\n", gai_strerror(status));
+		fprintf(stderr, RED"Server Error: "RESET "getaddrinfo() error = [%s]\n", gai_strerror(status));
 		return ERROR;
 	}
 
@@ -52,7 +56,7 @@ int createServer()
 	sockfd = socket(serverInfo->ai_family, serverInfo->ai_socktype, serverInfo->ai_protocol);
 	if (sockfd == -1)
 	{
-		perror("Server Error: Socket creation failed.\n");
+		perror(RED"Server Error: "RESET "Socket creation failed.\n");
 		return ERROR;
 	}
 
@@ -60,15 +64,15 @@ int createServer()
 	if (bind(sockfd, serverInfo->ai_addr, serverInfo->ai_addrlen) == -1)
 	{
 		close(sockfd);
-		perror("Server Error: Failed to bind socket.\n");
+		perror(RED"Server Error: "RESET "Failed to bind socket.\n");
 		return ERROR;
 	}
 
 	// Display server information
 	char hostName[BUFFER_SIZE];
 	gethostname(hostName, BUFFER_SIZE - 1);
-	printf("        Server Information        \n");
-	printf("==================================\n");
+	printf(YELLOW"        Server Information        \n");
+	printf("==================================\n"RESET);
 	printf("Host Address:\t %s\n", hostName);
 	printf("Port        :\t %d\n", ntohs(getPort((struct sockaddr *)serverInfo->ai_addr)));
 
@@ -105,8 +109,6 @@ void runServer(int _sockfd, int _numClients)
 	socklen_t addr_len;
 	int numBytes = 0;
 
-	printf("DEBUG: sockfd = [%d] | numClients = [%d]\n", _sockfd, _numClients);
-
 	int i = 0;
 	for(i = 0; i < _numClients; i++)
 	{
@@ -117,7 +119,7 @@ void runServer(int _sockfd, int _numClients)
 		if (numBytes == -1)
 		{
 			printf("numBytes = [%d]\n", numBytes);
-			perror("Server Error: recvfrom() failed. \n");
+			perror(RED"Server Error: "RESET "recvfrom() failed. \n");
 			exit(1);
 		}
 		const char *ipAddress;
@@ -125,7 +127,7 @@ void runServer(int _sockfd, int _numClients)
 							  get_in_addr((struct sockaddr*)&clientAddr[i]), 
 							  ipBuffer, 
 							  sizeof(ipBuffer));
-		printf("A host from %s has connected with: \t%s\t\n", ipAddress, buffer);
+		printf(YELLOW"A host from %s has connected with: \t%s\t\n"RESET, ipAddress, buffer);
 	}
 
 	close(_sockfd);
