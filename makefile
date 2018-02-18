@@ -1,12 +1,12 @@
 CC = gcc
 CFLAGS = -g -Wall
 OBJECTS = *.c
-SERVER = bbserver
+HOST = bbserver
 CLIENT = bbpeer
 TODELETE = *.o
 
 $SERVER : $(OBJECTS)
-	$(CC) $(CFLAGS) $(OBJECTS) -o $(SERVER)
+	$(CC) $(CFLAGS) $(OBJECTS) -o $(HOST)
 
 $CLIENT : $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) -o $(CLIENT)
