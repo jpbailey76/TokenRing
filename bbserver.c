@@ -87,14 +87,14 @@ int createServer()
 }
 
 
-void *get_in_addr(struct sockaddr *sa)
+void *get_in_addr(struct sockaddr *_sa)
 {
-	if (sa->sa_family == AF_INET) 
+	if (_sa->sa_family == AF_INET) 
 	{
-		return &(((struct sockaddr_in*)sa)->sin_addr);
+		return &(((struct sockaddr_in*)_sa)->sin_addr);
 	}
 
-	return &(((struct sockaddr_in6*)sa)->sin6_addr);
+	return &(((struct sockaddr_in6*)_sa)->sin6_addr);
 }
 
 in_port_t getPort(struct sockaddr *_sa)
