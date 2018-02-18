@@ -25,7 +25,7 @@ int main(int argc, char **argv)
 	if (argc != 2)
 	{
 		fprintf(stderr, RED"Input Error: "RESET "Anticipated input --> ./bbserver <# of hosts>\n");
-		return ERROR;
+		exit(EXIT_FAILURE);
 	}
 
 	if ((sockfd = createServer()) == ERROR)
