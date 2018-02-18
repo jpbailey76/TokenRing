@@ -5,7 +5,7 @@ HOST = bbserver
 CLIENT = bbpeer
 TODELETE = *.o
 
-$SERVER : $(OBJECTS)
+$HOST : $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) -o $(HOST)
 
 $CLIENT : $(OBJECTS)
