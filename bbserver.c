@@ -141,7 +141,7 @@ void runServer(int _sockfd, int _numClients)
 
 	for (i = 0; i < _numClients; i++)
 	{
-		sendto(_sockfd, responseBuff, strlen(responseBuff), 0, &clientAddr[i], sizeof(struct sockaddr));
+		sendto(_sockfd, responseBuff, strlen(responseBuff), 0, (struct sockaddr*)&clientAddr[i], sizeof(struct sockaddr));
 		printf("Sending response to a host.\n ")''
 	}
 
