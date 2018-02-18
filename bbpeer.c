@@ -20,7 +20,7 @@
 
 int main(int argc, char **argv) 
 {
-	if (argc != 4)
+	if (argc != 3)
 	{
 		fprintf(stderr, RED"Input Error: "RESET "Anticipated input -->"
 				"./bbpeer <Server Hostname> <Port>\n");
