@@ -17,5 +17,6 @@
 int main(int argc, char **argv) 
 {
 	
+	printf("Debug: BBPeer disconnected.\n");
 	return 0;
 }
