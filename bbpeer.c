@@ -61,7 +61,7 @@ int createClientSocket(char *_hostName, int _port, struct sockaddr_in *_dest)
 	hints.ai_socktype = SOCK_DGRAM;
 	hints.ai_flags = AI_PASSIVE;
 	snprintf(portBuffer, sizeof(portBuffer), "%i", _port);
-	if (getaddrinfo(_hostName, _port, &hints, &results) != 0)
+	if (getaddrinfo(_hostName, portBuffer, &hints, &results) != 0)
 	{
 		perror(RED"Client Error: "RESET "getaddrinfo() - failed to get host information.\n");
 		return ERROR;
