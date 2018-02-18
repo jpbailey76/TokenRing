@@ -36,7 +36,7 @@ int main(int argc, char **argv)
 	sockfd = createClientSocket(argv[1], atoi(argv[2]), &destination);
 	printf(BLUE "Debug:"RESET " Successfully created client socket. \n");
 
-	if (bindClientSocket(sockfd, atoi(argv[2])) == ERROR)
+	if (bindClientSocket(sockfd, 0) == ERROR)
 		return ERROR;
 
 	printf("Debug: BBPeer disconnected.\n");
