@@ -13,6 +13,8 @@
 
 // Defines
 #define ERROR -1
+#define SUCCESS 0
+
 #define BUFFER_SIZE 256
 #define RED "\x1b[31m"
 #define BLUE   "\x1B[34m"
