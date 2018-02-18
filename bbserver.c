@@ -77,8 +77,9 @@ int createServer()
 	gethostname(hostName, BUFFER_SIZE - 1);
 	printf(YELLOW"        Server Information        \n");
 	printf("==================================\n"RESET);
-	printf("Host Address:\t %s\n", hostName);
-	printf("Port        :\t %d\n", ntohs(getPort((struct sockaddr *)serverInfo->ai_addr)));
+	printf(YELLOW"|"RESET"Host Address:\t %s\t"YELLOW"|"RESET "\n", hostName);
+	printf(YELLOW"|"RESET"Port        :\t %d\t"YELLOW"|"RESET "\n", ntohs(getPort((struct sockaddr *)serverInfo->ai_addr)));
+	printf(YELLOW"==================================\n"RESET);
 
 	freeaddrinfo(serverInfo);
 
@@ -131,7 +132,7 @@ void runServer(int _sockfd, int _numClients)
 							  get_in_addr((struct sockaddr*)&clientAddr[i]), 
 							  ipBuffer, 
 							  sizeof(ipBuffer));
-		printf(YELLOW"A host from %s has connected with: \t%s\t\n"RESET, ipAddress, buffer);
+		printf(YELLOW"\nA host from %s has connected with: \t%s\t\n"RESET, ipAddress, buffer);
 	}
 
 	close(_sockfd);
