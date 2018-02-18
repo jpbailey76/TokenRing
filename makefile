@@ -1,11 +1,15 @@
 CC = gcc
 CFLAGS = -g -Wall
 OBJECTS = *.c
-OUT = bbserver
-TODELETE = $(OUT) *.o
+SERVER = bbserver
+CLIENT = bbpeer
+TODELETE = *.o
 
-$OUT : $(OBJECTS)
-	$(CC) $(CFLAGS) $(OBJECTS) -o $(OUT)
+$SERVER : $(OBJECTS)
+	$(CC) $(CFLAGS) $(OBJECTS) -o $(SERVER)
+
+$CLIENT : $(OBJECTS)
+	$(CC) $(CFLAGS) $(OBJECTS) -o $(CLIENT)
 
 .PHONY: clean
 clean:
