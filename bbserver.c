@@ -112,6 +112,7 @@ in_port_t getPort(struct sockaddr *_sa)
 void runServer(int _sockfd, int _numClients)
 {
 	char buffer[BUFFER_SIZE];
+	char responseBuff[BUFFER_SIZE];
 	char ipBuffer[INET6_ADDRSTRLEN];
 	struct sockaddr_storage clientAddr[_numClients];
 	socklen_t addr_len;
@@ -136,6 +137,13 @@ void runServer(int _sockfd, int _numClients)
 							  ipBuffer, 
 							  sizeof(ipBuffer));
 		printf(YELLOW"\nA host from %s has connected with: \t%s\t\n"RESET, ipAddress, buffer);
+	}
+
+	int i = 0;
+	for (i = 0; i < _numClients; i++)
+	{
+		sendto(_sockfd, responseBuff, strlen(responseBuff), 0, &clientAddr[i], sizeof(struct sockaddr));
+		printf("Sending response to a host.\n ")''
 	}
 
 	close(_sockfd);

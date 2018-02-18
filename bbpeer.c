@@ -15,6 +15,8 @@
 #define ERROR -1
 #define SUCCESS 0
 
+#define BUFFER_SIZE 256
+
 #define RED "\x1b[31m"
 #define BLUE   "\x1B[34m"
 #define YELLOW   "\x1B[33m"
@@ -22,6 +24,8 @@
 
 int main(int argc, char **argv) 
 {
+	char buffer[BUFFER_SIZE];
+
 	if (argc != 3)
 	{
 		fprintf(stderr, RED"Input Error: "RESET "Anticipated input -->"
@@ -31,13 +35,29 @@ int main(int argc, char **argv)
 	printf(BLUE "Debug:"RESET " Connecting to [%s].\n", argv[1]);
 	printf(BLUE "Debug:"RESET " Port # [%s].\n", argv[2]);
 
+	// Create client socket
 	int sockfd;
 	struct sockaddr_in destination;
 	sockfd = createClientSocket(argv[1], atoi(argv[2]), &destination);
 	printf(BLUE "Debug:"RESET " Successfully created client socket. \n");
 
+	// Bind the Socket
 	if (bindClientSocket(sockfd, 0) == ERROR)
 		return ERROR;
+
+	// Join the server
+	ssize_t numBytesSent;
+	numBytesSent = sendto(sockfd, "TOKEN", sizeof "TOKEN", 0, (struct sockaddr *)&destination, sizeof(struct sockaddr_in));
+	if (numBytesSent < 0)
+	{
+		perror(RED"Client-to-Server Error: "RESET "sendto() - request to join server failed.\n");
+		return ERROR;
+	}
+
+	// Receive server response
+	bzero(buffer, BUFSIZE);
+	ssize_t numBytesReceived;
+	numBytesReceived = recvfrom(sockfd, buffer, INET6_ADDRSTRLEN, 0, (struct sockaddr *)&destination, sizeof(struct sockaddr_in));
 
 	printf("Debug: BBPeer disconnected.\n");
 	return 0;
