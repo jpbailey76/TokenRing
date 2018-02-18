@@ -55,9 +55,16 @@ int main(int argc, char **argv)
 	}
 
 	// Receive server response
-	bzero(buffer, BUFSIZE);
+	bzero(buffer, BUFFER_SIZE);
 	ssize_t numBytesReceived;
-	numBytesReceived = recvfrom(sockfd, buffer, INET6_ADDRSTRLEN, 0, (struct sockaddr *)&destination, sizeof(struct sockaddr_in));
+	socklen_t clientlen;
+	clientlen = sizeof(struct sockaddr_in);
+	numBytesReceived = recvfrom(sockfd, buffer, INET6_ADDRSTRLEN, 0, (struct sockaddr *)&destination, clientlen);
+	if (numBytesReceived < 0)
+	{
+		perror(RED"Client-to-Server Error: "RESET "recvfrom() - response from server failed.\n");
+		return ERROR;
+	}
 
 	printf("Debug: BBPeer disconnected.\n");
 	return 0;
