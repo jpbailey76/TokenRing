@@ -57,7 +57,7 @@ int main(int argc, char **argv)
 	// Receive server response
 	bzero(buffer, BUFFER_SIZE);
 	ssize_t numBytesReceived;
-	socklen_t clientlen;
+	unsigned socklen_t clientlen;
 	clientlen = sizeof(struct sockaddr_in);
 	numBytesReceived = recvfrom(sockfd, buffer, INET6_ADDRSTRLEN, 0, (struct sockaddr *)&destination, clientlen);
 	if (numBytesReceived < 0)
