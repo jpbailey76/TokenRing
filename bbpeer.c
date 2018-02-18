@@ -51,7 +51,7 @@ int createClientSocket(char *_hostName, int _port, struct sockaddr_in *_dest)
 
 	// Clear socket
 	memset(_dest, 0, sizeof(struct sockaddr_in));
-	_dest->sin_port = htons((uint16_T)_port);
+	_dest->sin_port = htons((uint16_t)_port);
 	_dest->sin_family = AF_UNSPEC;
 	
 	// Get the host information.
