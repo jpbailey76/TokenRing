@@ -5,7 +5,7 @@ all: $(OBJECTS)
 TODELETE = *.o
 
 $(objects): %: %.c
-        $(CC) $(CFLAGS) -o $@ $<
+	$(CC) $(CFLAGS) -o $@ $<
 
 .PHONY: clean
 clean:
