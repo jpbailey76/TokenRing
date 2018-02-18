@@ -13,6 +13,8 @@
 
 // Defines
 #define ERROR -1
+#define SUCCESS 0
+
 #define RED "\x1b[31m"
 #define BLUE   "\x1B[34m"
 #define YELLOW   "\x1B[33m"
@@ -29,6 +31,71 @@ int main(int argc, char **argv)
 	printf(BLUE "Debug:"RESET " Connecting to [%s].\n", argv[1]);
 	printf(BLUE "Debug:"RESET " Port # [%s].\n", argv[2]);
 
+	int sockfd;
+	struct sockaddr_in destination;
+	sockfd = createClientSocket(argv[1], atoi(argv[2]), &destination);
+	printf(BLUE "Debug:"RESET " Successfully created client socket. \n");
+
+	if (bindClientSocket(sockfd, atoi(argv[2])) == ERROR)
+		return ERROR;
+
 	printf("Debug: BBPeer disconnected.\n");
 	return 0;
+}
+
+int createClientSocket(char *_hostName, int _port, struct sockaddr_in *_dest)
+{
+	struct addrinfo hints;
+	struct addrinfo *results;
+	struct addrinfo *p;
+
+	// Clear socket
+	memset(_dest, 0, sizeof(struct sockaddr_in));
+	_dest->sin_port = htons((uint16_T)_port);
+	_dest->sin_family = AF_UNSPEC;
+	
+	// Get the host information.
+	bzero(&hints, sizeof(struct addrinfo));
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_DGRAM;
+	hints.ai_flags = AI_PASSIVE;
+	if (getaddrinfo(_hostName, _port, &hints, &results) != 0)
+	{
+		perror(RED"Client Error: "RESET "getaddrinfo() - failed to get host information.\n");
+		return ERROR;
+	}
+
+	// Connect
+	int sockfd = ERROR;
+	for (p = results; p != NULL; p = p->ai_next)
+	{
+		sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
+		if (sockfd > 0)
+		{
+			memcpy(dest, p->ai_addr, p->ai_addrlen);
+			break;
+		}
+		sockfd = ERROR;
+	}
+
+	freeaddrinfo(results);
+	return sockfd;
+}
+
+int bindClientSocket(int _sockfd, int _port)
+{
+	struct sockaddr_in addr;
+	memset((char *)&addr, 0, sizeof(addr));
+
+	localaddr.sin_family = AF_UNSPEC;
+	localaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	localaddr.sin_port = htons(port);
+
+	if (bind(_sockfd, (struct sockaddr *)&addr, sizeof(addr)) == -1 )
+	{
+		perror(RED"Client Error: "RESET "bind() - Failed to bind client socket.\n");
+		return ERROR;
+	}
+
+	return SUCCESS;
 }
