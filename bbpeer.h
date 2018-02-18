@@ -3,5 +3,6 @@
 
 #include <netinet/in.h>
 
+int createClientSocket();
 
 #endif // BBPEER_H_
