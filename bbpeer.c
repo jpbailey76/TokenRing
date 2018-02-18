@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 	ssize_t numBytesReceived;
 	unsigned int clientlen;
 	clientlen = sizeof(struct sockaddr_in);
-	numBytesReceived = recvfrom(sockfd, buffer, INET6_ADDRSTRLEN, 0, (struct sockaddr *)&destination, clientlen);
+	numBytesReceived = recvfrom(sockfd, buffer, INET6_ADDRSTRLEN, 0, (struct sockaddr *)&destination, (socklen_t)clientlen);
 	if (numBytesReceived < 0)
 	{
 		perror(RED"Client-to-Server Error: "RESET "recvfrom() - response from server failed.\n");
