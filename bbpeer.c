@@ -74,7 +74,7 @@ int createClientSocket(char *_hostName, int _port, struct sockaddr_in *_dest)
 		sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
 		if (sockfd > 0)
 		{
-			memcpy(dest, p->ai_addr, p->ai_addrlen);
+			memcpy(_dest, p->ai_addr, p->ai_addrlen);
 			break;
 		}
 		sockfd = ERROR;
@@ -89,9 +89,9 @@ int bindClientSocket(int _sockfd, int _port)
 	struct sockaddr_in addr;
 	memset((char *)&addr, 0, sizeof(addr));
 
-	localaddr.sin_family = AF_UNSPEC;
-	localaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	localaddr.sin_port = htons(port);
+	addr.sin_family = AF_UNSPEC;
+	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	addr.sin_port = htons(_port);
 
 	if (bind(_sockfd, (struct sockaddr *)&addr, sizeof(addr)) == -1 )
 	{
