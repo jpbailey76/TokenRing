@@ -56,16 +56,14 @@ int createServer()
 	}
 
 	// Make the socket
-	sockfd = socket(serverInfo->ai_family, serverInfo->ai_socktype, serverInfo->ai_protocol);
+	/*sockfd = socket(serverInfo->ai_family, serverInfo->ai_socktype, serverInfo->ai_protocol);
 	if (sockfd == -1)
 	{
 		perror(RED"Server Error: "RESET "Socket creation failed.\n");
 		return ERROR;
-	}
+	}*/
 
-	// Reset
-	int yes = 1;
-	setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
+	
 
 	// Bind the socket
 	struct addrinfo *p = NULL;
@@ -84,6 +82,10 @@ int createServer()
 		}
 		break;  
 	}
+
+	// Reset
+	int yes = 1;
+	setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
 
 	//if (bind(sockfd, serverInfo->ai_addr, serverInfo->ai_addrlen) == -1)
 	//{
