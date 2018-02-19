@@ -63,10 +63,6 @@ int createServer()
 		return ERROR;
 	}*/
 
-	// Reset
-	int yes = 1;
-	setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
-
 	// Bind
 	if ((sockfd = bindSocket(serverInfo)) < 0)
 	{
@@ -168,6 +164,11 @@ int bindSocket(struct addrinfo *res)
 			perror(RED"Server Error: "RESET "Failed to create socket.\n");
 			continue;
 		}
+
+		// Reset
+		int yes = 1;
+		setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
+
 		if (bind(sockfd, res->ai_addr, res->ai_addrlen) < 0) 
 		{   
 			close(sockfd);
