@@ -63,17 +63,16 @@ int createServer()
 		return ERROR;
 	}*/
 
+	// Reset
+	int yes = 1;
+	setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
+
+	// Bind
 	if ((sockfd = bindSocket(serverInfo)) < 0)
 	{
 		perror("Error: Failed to bind to socket :");
 		exit(EXIT_FAILURE);
 	}
-
-
-
-	// Reset
-	int yes = 1;
-	setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
 
 	//if (bind(sockfd, serverInfo->ai_addr, serverInfo->ai_addrlen) == -1)
 	//{
