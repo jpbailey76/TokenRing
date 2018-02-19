@@ -67,6 +67,7 @@ int createServer()
 
 	// Bind the socket
 	struct addrinfo *p = NULL;
+	sockfd = -1;
 	for (p = serverInfo; p != NULL; p = p->ai_next) 
 	{
 		sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
