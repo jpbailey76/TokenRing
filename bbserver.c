@@ -44,7 +44,7 @@ int createServer()
 	int status, sockfd;
 	struct addrinfo hints, *serverInfo;
 
-	memset(&hints, 0, sizeof hints); // make sure the struct is empty
+	memset((void *)&hints, 0, (size_t) sizeof(hints)); // make sure the struct is empty
 	hints.ai_family = AF_UNSPEC;     // IPv4 or IPv6
 	hints.ai_socktype = SOCK_DGRAM;  // UDP sockets
 	hints.ai_flags = AI_PASSIVE;     // fill in my IP for me
