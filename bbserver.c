@@ -63,26 +63,13 @@ int createServer()
 		return ERROR;
 	}*/
 
-	
-
-	// Bind the socket
-	struct addrinfo *p = NULL;
-	sockfd = -1;
-	for (p = serverInfo; p != NULL; p = p->ai_next) 
+	if ((sockfd = bindSocket(serverInfo)) < 0)
 	{
-		sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
-		if (sockfd < 0)
-		{
-			perror(RED"Server Error: "RESET "Failed to create socket.\n");
-			continue;
-		}
-		if (bind(sockfd, serverInfo->ai_addr, serverInfo->ai_addrlen) < 0)
-		{ 
-			close(sockfd);
-			continue;
-		}
-		break;  
+		perror("Error: Failed to bind to socket :");
+		exit(EXIT_FAILURE);
 	}
+
+
 
 	// Reset
 	int yes = 1;
@@ -166,4 +153,32 @@ void runServer(int _sockfd, int _numClients)
 	}
 
 	close(_sockfd);
+}
+
+int bindSocket(struct addrinfo *res)
+{
+	int sockfd = -1;
+	struct addrinfo *p = NULL;
+
+	// Bind socket
+	for (p = res; p != NULL; p = p->ai_next) 
+	{
+		sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
+		if (sockfd < 0) 
+		{
+			perror(RED"Server Error: "RESET "Failed to create socket.\n");
+			continue;
+		}
+		if (bind(sockfd, res->ai_addr, res->ai_addrlen) < 0) 
+		{   
+			close(sockfd);
+			continue;
+		}
+		break;  
+	}
+
+	if (p == NULL) 
+		return -1;
+
+	return sockfd;
 }
