@@ -11,5 +11,7 @@ in_port_t getPort(struct sockaddr *sa);
 
 void runServer(int sockfd, int numHosts);
 
+int bindSocket(struct addrinfo *res);
+
 
 #endif // BBSERVER_H_
