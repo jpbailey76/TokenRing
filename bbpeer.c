@@ -53,6 +53,7 @@ int main(int argc, char **argv)
 		perror(RED"Client-to-Server Error: "RESET "sendto() - request to join server failed.\n");
 		return ERROR;
 	}
+	printf(BLUE "Debug:"RESET " Successfully sendto() server. \n");
 
 	// Receive server response
 	bzero(buffer, BUFFER_SIZE);
@@ -65,6 +66,7 @@ int main(int argc, char **argv)
 		perror(RED"Client-to-Server Error: "RESET "recvfrom() - response from server failed.\n");
 		return ERROR;
 	}
+	printf(BLUE "Debug:"RESET " Successfully recvfrom() server. \n");
 
 	printf("Debug: BBPeer disconnected.\n");
 	return 0;
