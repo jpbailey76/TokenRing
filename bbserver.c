@@ -71,15 +71,15 @@ int createServer()
 	struct addrinfo *p = NULL;
 	for (p = serverInfo; p != NULL; p = p->ai_next) 
 	{
-		sock = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
-		if (sock < 0) 
+		sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
+		if (sockfd < 0)
 		{
 			perror(RED"Server Error: "RESET "Failed to create socket.\n");
 			continue;
 		}
-		if (bind(sock, serverInfo->ai_addr, serverInfo->ai_addrlen) < 0)
+		if (bind(sockfd, serverInfo->ai_addr, serverInfo->ai_addrlen) < 0)
 		{ 
-			close(sock);
+			close(sockfd);
 			continue;
 		}
 		break;  
