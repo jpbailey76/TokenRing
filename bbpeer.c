@@ -82,11 +82,11 @@ int createClientSocket(char *_hostName, int _port, struct sockaddr_in *_dest)
 	// Clear socket
 	memset(_dest, 0, sizeof(struct sockaddr_in));
 	_dest->sin_port = htons((uint16_t)_port);
-	_dest->sin_family = AF_UNSPEC;
+	_dest->sin_family = AF_INET;
 	
 	// Get the host information.
 	bzero(&hints, sizeof(struct addrinfo));
-	hints.ai_family = AF_UNSPEC;
+	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_DGRAM;
 	hints.ai_flags = AI_PASSIVE;
 	snprintf(portBuffer, sizeof(portBuffer), "%i", _port);
@@ -118,7 +118,7 @@ int bindClientSocket(int _sockfd, int _port)
 	struct sockaddr_in addr;
 	memset((char *)&addr, 0, sizeof(addr));
 
-	addr.sin_family = AF_UNSPEC;
+	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	addr.sin_port = htons(_port);
 
