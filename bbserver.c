@@ -21,22 +21,67 @@
 #define BLUE   "\x1B[34m"
 #define YELLOW   "\x1B[33m"
 #define RESET "\x1B[0m"
+#define USAGE "Anticipated input --> ./bbserver <port #> <# of hosts>\n"
 
 int main(int argc, char **argv) 
 {
 	int sockfd;
 	if (argc != 2)
 	{
-		fprintf(stderr, RED"Input Error: "RESET "Anticipated input --> ./bbserver <# of hosts>\n");
+		fprintf(stderr, RED"Input Error: "RESET USAGE);
 		exit(EXIT_FAILURE);
 	}
 
+	PortNT server;
+	verifyInput(argc, argv, &server)
+
+	printf("DEBUG: numPeers = [%d]\tport = [%d]\n", server->N, server->port);
+
 	if ((sockfd = createServer()) == ERROR)
 		exit(EXIT_FAILURE);
+
 	runServer(sockfd, atoi(argv[1]));
 
 	printf("Server Closed.\n");
 	return 0;
+}
+
+void verifyInput(int argc, char **argv, PortNT *PN)
+{
+  if (3 > argc) 
+  {
+      printf(USAGE);
+      exit(EXIT_FAILURE);
+  }
+
+	int port, temp;
+  port = strtol(argv[1], NULL, 0);
+  if (1024 > port || 65535 < port) 
+  {
+    fprintf(stderr,"ERROR: Port must be in the range [1024, 65535])\n");
+    printf(USAGE);
+    exit(EXIT_FAILURE);
+  }
+
+  /* configure signal handlers */
+  signal(SIGINT, sighandler);
+  temp = atoi(argv[2]);
+  PN->N = temp;
+  PN->port = port;
+}
+
+/* Creates a new PeerT variable */
+PeerT *new_parray(PortNT *PN) 
+{
+  PeerT *PT;
+
+  PT = malloc(PN->N*sizeof(PeerT));
+  if(PT == NULL) 
+  {
+      fprintf(stderr, "Memory allocation failed!\n");
+      exit(EXIT_FAILURE);
+  }
+  return PT;
 }
 
 int createServer()
