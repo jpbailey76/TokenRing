@@ -82,13 +82,15 @@ int createServer(PortNT *server)
 {
 	int status, sockfd;
 	struct addrinfo hints, *serverInfo;
+	char port[32];
+	sprintf(port, "%d", server->port)
 
 	memset((void *)&hints, 0, (size_t) sizeof(hints)); // make sure the struct is empty
 	hints.ai_family = AF_INET;     // IPv4 or IPv6
 	hints.ai_socktype = SOCK_DGRAM;  // UDP sockets
 	hints.ai_flags = AI_PASSIVE;     // fill in my IP for me
 
-	if ((status = getaddrinfo(NULL, itoa(server->port), &hints, &serverInfo)) != 0) 
+	if ((status = getaddrinfo(NULL, port, &hints, &serverInfo)) != 0) 
 	{
 		fprintf(stderr, RED"Server Error: "RESET "getaddrinfo() error = [%s]\n", gai_strerror(status));
 		return ERROR;
