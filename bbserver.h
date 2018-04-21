@@ -15,6 +15,8 @@ typedef struct port_N {
     int port;
 } PortNT;
 
+PeerT *new_parray(PortNT *PN);
+
 void verifyInput(int argc, char **argv, PortNT *PN);
 
 int createServer();
