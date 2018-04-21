@@ -179,7 +179,7 @@ void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
 							  get_in_addr((struct sockaddr*)&clientAddr[i]), 
 							  ipBuffer, 
 							  sizeof(ipBuffer));
-		printf(YELLOW"\nA host from %s has connected with: \t%s\t\n"RESET, ipAddress, buffer);
+		printf(YELLOW"\nA host from %s has connected with:"RESET"\t%s\t\n", ipAddress, buffer);
 	}
 
 	for (i = 0; i < _server->numClients; i++)
