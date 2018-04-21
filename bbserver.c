@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 	PortNT server;
 	verifyInput(argc, argv, &server);
 
-	printf("DEBUG: numPeers = [%d]\tport = [%d]\n", server.N, server.port);
+	printf("DEBUG: numPeers = [%d]\tport = [%d]\n", server.numClients, server.port);
 
 	if ((sockfd = createServer(&server)) == ERROR)
 		exit(EXIT_FAILURE);
@@ -60,7 +60,7 @@ void verifyInput(int argc, char **argv, PortNT *PN)
   }
 
   temp = atoi(argv[2]);
-  PN->N = temp;
+  PN->numClients = temp;
   PN->port = port;
 }
 
@@ -69,7 +69,7 @@ PeerT *new_parray(PortNT *PN)
 {
   PeerT *PT;
 
-  PT = malloc(PN->N*sizeof(PeerT));
+  PT = malloc(PN->numClients*sizeof(PeerT));
   if(PT == NULL) 
   {
       fprintf(stderr, "Memory allocation failed!\n");
@@ -161,7 +161,7 @@ void runServer(int _sockfd, int _numClients, PeerT *_peerArray, PortNT *_server)
 	int numBytes = 0;
 
 	int i = 0;
-	for(i = 0; i < _server.numClients; i++)
+	for(i = 0; i < _server->numClients; i++)
 	{
 		printf("Waiting for a connection...\n");
 		addr_len = sizeof(clientAddr);
