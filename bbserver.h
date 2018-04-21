@@ -23,7 +23,7 @@ void *get_in_addr(struct sockaddr *sa);
 
 in_port_t getPort(struct sockaddr *sa);
 
-void runServer(int sockfd, int numHosts);
+void runServer(int sockfd, int numHosts, PeerT *peerArray, PortNT *server);
 
 int bindSocket(struct addrinfo *res);
 

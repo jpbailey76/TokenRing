@@ -34,7 +34,9 @@ int main(int argc, char **argv)
 	if ((sockfd = createServer()) == ERROR)
 		exit(EXIT_FAILURE);
 
-	runServer(sockfd, atoi(argv[1]));
+	// Create peer array and run server.
+  PeerT *peerArray = new_parray(&server);
+	runServer(sockfd, atoi(argv[1]), peerArray, server);
 
 	printf("Server Closed.\n");
 	return 0;
@@ -148,7 +150,7 @@ in_port_t getPort(struct sockaddr *_sa)
 	return (((struct sockaddr_in6*)_sa)->sin6_port);
 }
 
-void runServer(int _sockfd, int _numClients)
+void runServer(int _sockfd, int _numClients, , PeerT *_peerArray, PortNT *_server)
 {
 	char buffer[BUFFER_SIZE];
 	char responseBuff[BUFFER_SIZE];
