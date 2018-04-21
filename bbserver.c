@@ -88,7 +88,7 @@ int createServer(PortNT *server)
 	hints.ai_socktype = SOCK_DGRAM;  // UDP sockets
 	hints.ai_flags = AI_PASSIVE;     // fill in my IP for me
 
-	if ((status = getaddrinfo(NULL, serverInfo->port, &hints, &serverInfo)) != 0) 
+	if ((status = getaddrinfo(NULL, server->port, &hints, &serverInfo)) != 0) 
 	{
 		fprintf(stderr, RED"Server Error: "RESET "getaddrinfo() error = [%s]\n", gai_strerror(status));
 		return ERROR;
