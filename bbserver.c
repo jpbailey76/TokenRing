@@ -26,12 +26,6 @@
 int main(int argc, char **argv) 
 {
 	int sockfd;
-	if (argc != 2)
-	{
-		fprintf(stderr, RED"Input Error: "RESET USAGE);
-		exit(EXIT_FAILURE);
-	}
-
 	PortNT server;
 	verifyInput(argc, argv, &server);
 
@@ -58,7 +52,7 @@ void verifyInput(int argc, char **argv, PortNT *PN)
   port = strtol(argv[1], NULL, 0);
   if (1024 > port || 65535 < port) 
   {
-    fprintf(stderr,"ERROR: Port must be in the range [1024, 65535])\n");
+    fprintf(stderr,RED"Input Error: "RESET "Port must be in the range [1024, 65535])\n");
     printf(USAGE);
     exit(EXIT_FAILURE);
   }
