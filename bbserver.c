@@ -150,7 +150,7 @@ in_port_t getPort(struct sockaddr *_sa)
 	return (((struct sockaddr_in6*)_sa)->sin6_port);
 }
 
-void runServer(int _sockfd, int _numClients, , PeerT *_peerArray, PortNT *_server)
+void runServer(int _sockfd, int _numClients, PeerT *_peerArray, PortNT *_server)
 {
 	char buffer[BUFFER_SIZE];
 	char responseBuff[BUFFER_SIZE];
