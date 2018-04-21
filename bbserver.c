@@ -83,7 +83,6 @@ int createServer(PortNT *server)
 	int status, sockfd;
 	struct addrinfo hints, *serverInfo;
 	char port[32];
-	sprintf(port, "%d", server->port);
 
 	memset((void *)&hints, 0, (size_t) sizeof(hints)); // make sure the struct is empty
 	hints.ai_family = AF_INET;     // IPv4 or IPv6
@@ -162,7 +161,7 @@ void runServer(int _sockfd, int _numClients, PeerT *_peerArray, PortNT *_server)
 	int numBytes = 0;
 
 	int i = 0;
-	for(i = 0; i < _numClients; i++)
+	for(i = 0; i < _server.numClients; i++)
 	{
 		printf("Waiting for a connection...\n");
 		addr_len = sizeof(clientAddr);

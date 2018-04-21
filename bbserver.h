@@ -11,7 +11,7 @@ typedef struct bbpeer_info {
 
 /* Struct to store server port and number of clients*/ 
 typedef struct port_N {
-    int N;
+    int numClients;
     int port;
 } PortNT;
 
