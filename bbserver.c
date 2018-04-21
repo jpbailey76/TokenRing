@@ -31,7 +31,7 @@ int main(int argc, char **argv)
 
 	printf("DEBUG: numPeers = [%d]\tport = [%d]\n", server.N, server.port);
 
-	if ((sockfd = createServer()) == ERROR)
+	if ((sockfd = createServer(&server)) == ERROR)
 		exit(EXIT_FAILURE);
 
 	// Create peer array and run server.
@@ -78,7 +78,7 @@ PeerT *new_parray(PortNT *PN)
   return PT;
 }
 
-int createServer()
+int createServer(PortNT *server)
 {
 	int status, sockfd;
 	struct addrinfo hints, *serverInfo;
@@ -88,7 +88,7 @@ int createServer()
 	hints.ai_socktype = SOCK_DGRAM;  // UDP sockets
 	hints.ai_flags = AI_PASSIVE;     // fill in my IP for me
 
-	if ((status = getaddrinfo(NULL, "6969", &hints, &serverInfo)) != 0) 
+	if ((status = getaddrinfo(NULL, serverInfo.ports, &hints, &serverInfo)) != 0) 
 	{
 		fprintf(stderr, RED"Server Error: "RESET "getaddrinfo() error = [%s]\n", gai_strerror(status));
 		return ERROR;

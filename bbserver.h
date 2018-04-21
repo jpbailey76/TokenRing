@@ -17,9 +17,9 @@ typedef struct port_N {
 
 PeerT *new_parray(PortNT *PN);
 
-void verifyInput(int argc, char **argv, PortNT *PN);
+void verifyInput(int argc, char **argv, PortNT *server);
 
-int createServer();
+int createServer(PortNT *server);
 
 void *get_in_addr(struct sockaddr *sa);
 
