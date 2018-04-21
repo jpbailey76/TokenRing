@@ -36,7 +36,7 @@ int main(int argc, char **argv)
 
 	// Create peer array and run server.
   PeerT *peerArray = new_parray(&server);
-	runServer(sockfd, atoi(argv[1]), peerArray, &server);
+	runServer(sockfd, peerArray, &server);
 
 	printf("Server Closed.\n");
 	return 0;
@@ -152,12 +152,12 @@ in_port_t getPort(struct sockaddr *_sa)
 	return (((struct sockaddr_in6*)_sa)->sin6_port);
 }
 
-void runServer(int _sockfd, int _numClients, PeerT *_peerArray, PortNT *_server)
+void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
 {
 	char buffer[BUFFER_SIZE];
 	char responseBuff[BUFFER_SIZE];
 	char ipBuffer[INET6_ADDRSTRLEN];
-	struct sockaddr_storage clientAddr[_numClients];
+	struct sockaddr_storage clientAddr[_server->numClients];
 	socklen_t addr_len;
 	int numBytes = 0;
 
@@ -182,7 +182,7 @@ void runServer(int _sockfd, int _numClients, PeerT *_peerArray, PortNT *_server)
 		printf(YELLOW"\nA host from %s has connected with: \t%s\t\n"RESET, ipAddress, buffer);
 	}
 
-	for (i = 0; i < _numClients; i++)
+	for (i = 0; i < _server->numClients; i++)
 	{
 		sendto(_sockfd, responseBuff, strlen(responseBuff), 0, (struct sockaddr*)&clientAddr[i], sizeof(struct sockaddr));
 		printf("Sending response to a host.\n ");
