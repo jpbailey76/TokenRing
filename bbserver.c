@@ -36,7 +36,7 @@ int main(int argc, char **argv)
 
 	// Create peer array and run server.
   PeerT *peerArray = new_parray(&server);
-	runServer(sockfd, atoi(argv[1]), peerArray, server);
+	runServer(sockfd, atoi(argv[1]), peerArray, &server);
 
 	printf("Server Closed.\n");
 	return 0;
