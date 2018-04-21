@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 	PortNT server;
 	verifyInput(argc, argv, &server);
 
-	printf("DEBUG: numPeers = [%d]\tport = [%d]\n", server->N, server->port);
+	printf("DEBUG: numPeers = [%d]\tport = [%d]\n", server.N, server.port);
 
 	if ((sockfd = createServer()) == ERROR)
 		exit(EXIT_FAILURE);
