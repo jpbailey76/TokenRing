@@ -188,6 +188,23 @@ void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
 		printf("Sending response to a host.\n ");
 	}
 
+
+	printf("Sending Data Ring Position to Clients \n");
+  for (i = 0; i < _server->numClients; i++)
+  {
+      j = (i + 1) % _server->numClients;
+      memcpy(&_peerArray[i].peer, &peer_array[j].client, sizeof (struct sockaddr_in));
+      printf("%08X:%d\t%08X:%d\n",
+             peer_array[i].client.sin_addr.s_addr,
+             peer_array[i].client.sin_port,
+             peer_array[i].peer.sin_addr.s_addr,
+             peer_array[i].peer.sin_port);
+      len = sendto(server.sockfd, &peer_array[i], sizeof (PeerT), 0,
+              (struct sockaddr *) &peer_array[i].client, sizeof (struct sockaddr_in));
+      if (REQUEST_PACKET_SIZE != len)
+          puts(strerror(errno));
+  }
+
 	close(_sockfd);
 }
 
