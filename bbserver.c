@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 	}
 
 	PortNT server;
-	verifyInput(argc, argv, &server)
+	verifyInput(argc, argv, &server);
 
 	printf("DEBUG: numPeers = [%d]\tport = [%d]\n", server->N, server->port);
 
@@ -63,8 +63,6 @@ void verifyInput(int argc, char **argv, PortNT *PN)
     exit(EXIT_FAILURE);
   }
 
-  /* configure signal handlers */
-  signal(SIGINT, sighandler);
   temp = atoi(argv[2]);
   PN->N = temp;
   PN->port = port;
