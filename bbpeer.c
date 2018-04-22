@@ -44,8 +44,6 @@ int main(int argc, char **argv)
 	char buffer[BUFFER_SIZE];
 	struct addrinfo *server;
 	struct sockaddr_in peer;
-	const char address[] = argv[1];
-	const char port[] = argv[2];
 
 	// Check the validity of the user input
 	verifyInput(argc, argv);
@@ -56,7 +54,7 @@ int main(int argc, char **argv)
 	}
 
 	// Get server info and create the client socket
-	server = getServerInfo(server, port);
+	server = getServerInfo(argv[1], argv[2]);
 	sockfd = socket(server.ai_family, server.ai_socktype, server.ai_protocol);
 	if (sockfd < 0)	
 	{
