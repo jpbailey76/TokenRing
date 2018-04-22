@@ -304,21 +304,19 @@ void displayMenu()
     if(fgets(input, sizeof input, stdin) != NULL)
 		{
 			printf("input = [%s]\n", input);
-		  switch (input) {
-		  case "1":
+
+			if(input == "1")
 		  		writeToBulletin();
-		      break;
-
-		  case '2':
-		  		// readFromBulletin();
-		      break;
-
-		  case '3':
-		      return;
-
-		  default:
-		      break;
-		  }
+			else if(input == "2")
+			{
+				printf("Not added yet.\n");
+		    //readFromBulletin();
+			}
+			else if(input == "3")	
+			{
+				printf("Not added yet.\n");
+				//exit();
+			}
 		}
   }   
 }
