@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 
 	// Get server info and create the client socket
 	server = getServerInfo(argv[1], argv[2]);
-	sockfd = socket(server.ai_family, server.ai_socktype, server.ai_protocol);
+	sockfd = socket(server->ai_family, server->ai_socktype, server->ai_protocol);
 	if (sockfd < 0)	
 	{
 		fprintf(stderr, RED"Error: "RESET 
