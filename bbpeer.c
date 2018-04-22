@@ -188,6 +188,9 @@ void handshake(int _sockfd)
   sendto(_sockfd, &ring.client, sizeof ring.client, 0,
          (struct sockaddr *) &ring.peer, sizeof ring.peer);
 
+  printf(BLUE"Debug: "RESET
+  			 "Handshake sent.\n");
+
   /*
    * Repeat the following until we decide to start the token or we get the
    * token from a peer.
@@ -196,6 +199,10 @@ void handshake(int _sockfd)
   {
     // Receive a peer address for comparison to our own.
     len = recvfrom(_sockfd, &peer, sizeof peer, 0, NULL, 0);
+
+
+    printf(BLUE"Debug: "RESET
+  			 "Token passing started.\n");
 
     // Token received
     if (sizeof (uint32_t) == len)
