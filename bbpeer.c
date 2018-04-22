@@ -50,8 +50,8 @@ int main(int argc, char **argv)
 	printf(BLUE "Debug:"RESET " Successfully created client socket. \n");
 
 	// Bind the Socket
-	if (bindClientSocket(sockfd, 0) == ERROR)
-		return ERROR;
+	// if (bindClientSocket(sockfd, 0) == ERROR)
+	// 	return ERROR;
 
 	// Gather peer info
 	struct sockaddr_in peer;
@@ -199,6 +199,9 @@ void handshake(int _sockfd)
   {
   	printf(BLUE"Debug: "RESET
   			 "recvfrom() - sockfd = [%d].\n", _sockfd);
+
+  	printf(BLUE"Debug: "RESET
+  			 "\n",);
     
     // Receive a peer address for comparison to our own.
     len = recvfrom(_sockfd, &peer, sizeof peer, 0, NULL, 0);
