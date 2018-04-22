@@ -3,6 +3,7 @@
 #include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -24,73 +25,97 @@
 #define RESET "\x1B[0m"
 
 
+// Server ring struct
 static ClientData ring;
-struct addrinfo *server;
-static const uint32_t TOKEN = 0;
+static int sockfd;
 
+// Token & token thread
+static const uint32_t TOKEN = 0;
 static pthread_t token_Thread;   
+
+// Bulletin Board File
+static const char *BULLETIN_BOARD;
+
+// Debug flag
+static const bool DEBUG = true;
 
 int main(int argc, char **argv) 
 {
 	char buffer[BUFFER_SIZE];
+	struct addrinfo *server;
+	struct sockaddr_in peer;
+	const char address[] = argv[1];
+	const char port[] = argv[2];
 
-	if (argc != 3)
+	// Check the validity of the user input
+	verifyInput(argc, argv);
+	if(DEBUG)
 	{
-		fprintf(stderr, RED"Input Error: "RESET "Anticipated input -->"
-				"./bbpeer <Server Hostname> <Port>\n");
-		exit(EXIT_FAILURE);
+		printf(BLUE "Debug:"RESET " Connecting to [%s].\n", argv[1]);
+		printf(BLUE "Debug:"RESET " Port # [%s].\n", argv[2]);
 	}
-	printf(BLUE "Debug:"RESET " Connecting to [%s].\n", argv[1]);
-	printf(BLUE "Debug:"RESET " Port # [%s].\n", argv[2]);
 
-	// Create client socket
-	int sockfd;
-	struct sockaddr_in destination;
-	sockfd = createClientSocket(argv[1], atoi(argv[2]), &destination);
-	printf(BLUE "Debug:"RESET " Successfully created client socket. \n");
-
-	// Bind the Socket
-	// if (bindClientSocket(sockfd, 0) == ERROR)
-	// 	return ERROR;
+	// Get server info and create the client socket
+	server = getServerInfo(server, port);
+	sockfd = socket(server.ai_family, server.ai_socktype, server.ai_protocol);
+	if (sockfd < 0)	
+	{
+		fprintf(stderr, RED"Error: "RESET 
+			"main() - Failed to create socket.\n");
+    exit(EXIT_FAILURE);
+	}
+	if(DEBUG)
+		printf(BLUE "Debug:"RESET " Successfully created client socket. \n");
 
 	// Gather peer info
-	struct sockaddr_in peer;
-	requestpeer(sockfd, server->ai_addr);
+	requestPeer(server->ai_addr);
 
 	// Determine who gets the token first
-  handshake(sockfd);
+  handshake();
 
   // Start token passing thread.
-  pthread_create(&token_Thread, NULL, tokenPassing_Thread, sockfd);
+  pthread_create(&token_Thread, NULL, tokenPassing_Thread, NULL);
 
   // Display bulletin options
   displayMenu();  
 
-	// Join the server
-	// ssize_t numBytesSent;
-	// numBytesSent = sendto(sockfd, "TOKEN", sizeof "TOKEN", 0, (struct sockaddr *)&destination, sizeof(struct sockaddr_in));
-	// if (numBytesSent < 0)
-	// {
-	// 	perror(RED"Client-to-Server Error: "RESET "sendto() - request to join server failed.\n");
-	// 	return ERROR;
-	// }
-	// printf(BLUE "Debug:"RESET " Successfully sendto() server. \n");
-
-	// // Receive server response
-	// bzero(buffer, BUFFER_SIZE);
-	// ssize_t numBytesReceived;
-	// socklen_t clientlen;
-	// clientlen = sizeof(struct sockaddr_in);
-	// numBytesReceived = recvfrom(sockfd, buffer, INET6_ADDRSTRLEN, 0, (struct sockaddr *)&destination, &clientlen);
-	// if (numBytesReceived < 0)
-	// {
-	// 	perror(RED"Client-to-Server Error: "RESET "recvfrom() - response from server failed.\n");
-	// 	return ERROR;
-	// }
-	// printf(BLUE "Debug:"RESET " Successfully recvfrom() server. \n");
-
-	printf("Debug: BBPeer disconnected.\n");
+  if(DEBUG)
+  {
+  	printf(BLUE"Debug: "RESET
+  			 "BBPeer disconnected.\n");
+  }
 	return 0;
+}
+
+void verifyInput(int argc, char **argv)
+{
+	if (argc < 4) 
+	{
+    fprintf(stderr, RED"Input Error: "RESET "Anticipated input -->"
+				"./bbpeer <Server Hostname> <Port>\n");
+    exit(EXIT_FAILURE);
+  }
+
+  BULLETIN_BOARD = argv[3];
+}
+
+struct addrinfo getServerInfo(const char *_address, const char *_port)
+{
+	int status;
+	struct addrinfo hints, *res;
+
+	memset(&hints, 0, sizeof hints);
+	hints.ai_family = AF_INET;
+	hints.ai_socktype = SOCK_DGRAM;
+
+	status = getaddrinfo(_address, _port, &hints, &res);
+	if (status != 0)
+	{
+		fprintf(stderr, RED"Error: "RESET 
+			"getServerInfo() - Failed to get address info.>\n");
+    exit(EXIT_FAILURE);
+	}
+	return res;
 }
 
 int createClientSocket(char *_hostName, int _port, struct sockaddr_in *_dest)
@@ -151,85 +176,83 @@ int bindClientSocket(int _sockfd, int _port)
 	return SUCCESS;
 }
 
-void requestpeer(int _sockfd, const struct sockaddr *_server)
+void requestPeer(const struct sockaddr *_server)
 {
-    const char message[] = "connect";
-    int len;
+  const char message[] = "connect";
+  int len;
 
-    printf("Waiting for the token ring to form...\n");
+  printf("Waiting for the token ring to form...\n");
 
-    /* send the request */
-    len = sendto(_sockfd, message, strlen(message), 0,
-                 _server, sizeof (struct sockaddr_in));
-    if (strlen(message) != len)
-    {
-    	perror(RED"Error: "RESET "requestpeer() - Invalid message length.\n");
-    	exit(EXIT_FAILURE);
-    }
-    	
-        
-    /* handle the response */
-    recvfrom(_sockfd, &ring, sizeof ring, 0, NULL, 0);
-    printf("Received peer from the server. Negotiating first token holder...\n");
+  // Request for a peer
+  len = sendto(sockfd, message, strlen(message), 0,
+               _server, sizeof (struct sockaddr_in));
+  if (strlen(message) != len)
+  {
+  	perror(RED"Error: "RESET 
+  		"requestpeer() - Invalid message length.\n");
+  	exit(EXIT_FAILURE);
+  }
+      
+  // Recieved a request 
+  recvfrom(sockfd, &ring, sizeof ring, 0, NULL, 0);
+  printf("Received peer from the server. Negotiating first token holder...\n");
 
-    /* pause so that all peers have time to get the server message */
-    sleep(1);
-
-    printf(BLUE"Debug: "RESET"After sleep\n");
+  // Wait for all peers
+  sleep(1);
+  if(DEBUG)
+  	printf(BLUE"Debug: "RESET"After sleep\n");
 }
 
-void handshake(int _sockfd)
+void handshake()
 {
 	struct sockaddr_in peer;
   ssize_t len;
   int comparison;
 
   // Send address to the peer 
-  sendto(_sockfd, &ring.client, sizeof ring.client, 0,
+  sendto(sockfd, &ring.client, sizeof ring.client, 0,
          (struct sockaddr *) &ring.peer, sizeof ring.peer);
-
-  printf(BLUE"Debug: "RESET
-  			 "Handshake sent.\n");
-
-  /*
-   * Repeat the following until we decide to start the token or we get the
-   * token from a peer.
-   */
-  while (1) 
+  if(DEBUG)
   {
   	printf(BLUE"Debug: "RESET
-  			 "recvfrom() - sockfd = [%d].\n", _sockfd);
+  			 "Handshake sent.\n");
+  }
 
-  	printf(BLUE"Debug: "RESET
-  			 "\n",);
-    
+  // Wait for a token, or pass it.
+  while (1) 
+  {
+  	if(DEBUG)
+  	{
+  		printf(BLUE"Debug: "RESET
+  			 "recvfrom() - sockfd = [%d].\n", sockfd);
+  	}
+  	
     // Receive a peer address for comparison to our own.
-    len = recvfrom(_sockfd, &peer, sizeof peer, 0, NULL, 0);
+    len = recvfrom(sockfd, &peer, sizeof peer, 0, NULL, 0);
 
-
-    printf(BLUE"Debug: "RESET
+    if(DEBUG)
+    {
+    	printf(BLUE"Debug: "RESET
   			 "Token passing started.\n");
+    }
 
     // Token received
     if (sizeof (uint32_t) == len)
       break;
     else if (sizeof (peer) != len)
     {
-    	perror(RED"Error: "RESET "handshake() - Invalid message length.\n");
+    	perror(RED"Error: "RESET 
+    		"handshake() - Invalid message length.\n");
     	exit(EXIT_FAILURE);
     }
 
-    /*
-     * We received a peer address the must be compared to our own. If it is
-     * our local address, then we had the lowest value and get the token
-     * first. Otherwise, we forward any addresses lower than our own.
-     */
     comparison = compare(&ring.client, &peer);
-    if (0 == comparison) 
+    if (comparison == 0) 
     {
       printf("Initial possession of the token\n");
       break;
-    } else if (0 < comparison) 
+    } 
+    else if (comparison > 0) 
     {
       printf("Forwarding a lower peer address...\n");
       sendto(_sockfd, &peer, sizeof peer, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
@@ -239,28 +262,27 @@ void handshake(int _sockfd)
 
 int compare(struct sockaddr_in *left, struct sockaddr_in *right)
 {
-    if (left->sin_addr.s_addr < right->sin_addr.s_addr) 
-    {
+  if (left->sin_addr.s_addr < right->sin_addr.s_addr) 
+  {
+    return -1;
+  } 
+  else if (left->sin_addr.s_addr == right->sin_addr.s_addr) 
+  {
+    if (left->sin_port < right->sin_port)
       return -1;
-    } 
-    else if (left->sin_addr.s_addr == right->sin_addr.s_addr) 
-    {
-      if (left->sin_port < right->sin_port)
-        return -1;
-      else if (left->sin_port == right->sin_port)
-        return 0;
-      else
-        return 1;
-    }
+    else if (left->sin_port == right->sin_port)
+      return 0;
+    else
+      return 1;
+  }
 
-    return 1;
+  return 1;
 }
 
-void * tokenPassing_Thread(void *_sockfd)
+void * tokenPassing_Thread(void *arg)
 {
   ClientData peer;
   ssize_t len;
-  int sockfd = (intptr_t)_sockfd;
 
   // Pass the token around 
   sendto(sockfd, &TOKEN, sizeof TOKEN, 0,

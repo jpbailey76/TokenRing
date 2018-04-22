@@ -9,13 +9,18 @@ typedef struct ClientData
     struct sockaddr_in peer;
 } ClientData;
 
+
+void verifyInput(int argc, char **argv);
+
+struct addrinfo getServerInfo(const char *addr, const char *port);
+
 int createClientSocket(char *hostName, int port, struct sockaddr_in *dest);
 
 int bindClientSocket(int sockfd, int port);
 
-void requestpeer(int sockfd, const struct sockaddr *server);
+void requestPeer(const struct sockaddr *server);
 
-void handshake(int sockfd);
+void handshake();
 
 /**
  * Compares two IP addresses 

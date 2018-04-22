@@ -4,13 +4,15 @@
 #include <netinet/in.h>
 
 /* Struct that stores neighbor information */
-typedef struct bbpeer_info {
+typedef struct bbpeer_info 
+{
     struct sockaddr_in client;
     struct sockaddr_in peer;
 } PeerT;
 
 /* Struct to store server port and number of clients*/ 
-typedef struct port_N {
+typedef struct port_N 
+{
     int numClients;
     int port;
 } PortNT;
