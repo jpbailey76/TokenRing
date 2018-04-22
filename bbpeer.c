@@ -259,7 +259,7 @@ void * tokenPassing_Thread(void *_sockfd)
     // Check if client is requesting a leave by sending its address
     // or if it's passing the token.
     if (sizeof (ClientData) == len) 
-      peerExit(&peer);
+      peerExit(sockfd, &peer);
     else if (sizeof TOKEN == len) 
       sendto(sockfd, &TOKEN, sizeof TOKEN, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
   }
@@ -271,7 +271,7 @@ void * tokenPassing_Thread(void *_sockfd)
   pthread_exit(EXIT_SUCCESS);
 }
 
-void peerExit(ClientData *request)
+void peerExit(int _sockfd, ClientData *_request)
 {
   // Our neighbor is leaving, so send to the peer after them.
   if (0 == compare(&request->client, &ring.peer)) 
