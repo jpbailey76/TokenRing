@@ -303,6 +303,7 @@ void displayMenu()
 
     if(fgets(input, sizeof input, stdin) != NULL)
 		{
+			printf("input = [%s]\n", input);
 		  switch (atoi(input)) {
 		  case '1':
 		  		writeToBulletin();
