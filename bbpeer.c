@@ -295,25 +295,29 @@ void displayMenu()
         YELLOW"3."RESET " Exit\n"
         "\n"
         YELLOW"Selection: "RESET;
+  char input[256];
 
   while (1) 
   {
     fputs(menu, stdout);
     fflush(stdout);
 
-    switch (getch()) {
-    case '1':
-        break;
+    if(fgets(input, sizeof input, stdin) != NULL)
+		{
+		  switch (input) {
+		  case '1':
+		      break;
 
-    case '2':
-        break;
+		  case '2':
+		      break;
 
-    case '3':
-        return;
+		  case '3':
+		      return;
 
-    default:
-        break;
-    }
+		  default:
+		      break;
+		  }
+		}
   }   
 
 }
