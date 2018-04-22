@@ -23,6 +23,9 @@
 #define YELLOW   "\x1B[33m"
 #define RESET "\x1B[0m"
 
+/** local host and peer address information */
+static ClientData ring;
+
 int main(int argc, char **argv) 
 {
 	char buffer[BUFFER_SIZE];
@@ -46,28 +49,32 @@ int main(int argc, char **argv)
 	if (bindClientSocket(sockfd, 0) == ERROR)
 		return ERROR;
 
-	// Join the server
-	ssize_t numBytesSent;
-	numBytesSent = sendto(sockfd, "TOKEN", sizeof "TOKEN", 0, (struct sockaddr *)&destination, sizeof(struct sockaddr_in));
-	if (numBytesSent < 0)
-	{
-		perror(RED"Client-to-Server Error: "RESET "sendto() - request to join server failed.\n");
-		return ERROR;
-	}
-	printf(BLUE "Debug:"RESET " Successfully sendto() server. \n");
+	struct sockaddr_in peer;
+	requestpeer(&peer, destination.ai_addr);
 
-	// Receive server response
-	bzero(buffer, BUFFER_SIZE);
-	ssize_t numBytesReceived;
-	socklen_t clientlen;
-	clientlen = sizeof(struct sockaddr_in);
-	numBytesReceived = recvfrom(sockfd, buffer, INET6_ADDRSTRLEN, 0, (struct sockaddr *)&destination, &clientlen);
-	if (numBytesReceived < 0)
-	{
-		perror(RED"Client-to-Server Error: "RESET "recvfrom() - response from server failed.\n");
-		return ERROR;
-	}
-	printf(BLUE "Debug:"RESET " Successfully recvfrom() server. \n");
+
+	// Join the server
+	// ssize_t numBytesSent;
+	// numBytesSent = sendto(sockfd, "TOKEN", sizeof "TOKEN", 0, (struct sockaddr *)&destination, sizeof(struct sockaddr_in));
+	// if (numBytesSent < 0)
+	// {
+	// 	perror(RED"Client-to-Server Error: "RESET "sendto() - request to join server failed.\n");
+	// 	return ERROR;
+	// }
+	// printf(BLUE "Debug:"RESET " Successfully sendto() server. \n");
+
+	// // Receive server response
+	// bzero(buffer, BUFFER_SIZE);
+	// ssize_t numBytesReceived;
+	// socklen_t clientlen;
+	// clientlen = sizeof(struct sockaddr_in);
+	// numBytesReceived = recvfrom(sockfd, buffer, INET6_ADDRSTRLEN, 0, (struct sockaddr *)&destination, &clientlen);
+	// if (numBytesReceived < 0)
+	// {
+	// 	perror(RED"Client-to-Server Error: "RESET "recvfrom() - response from server failed.\n");
+	// 	return ERROR;
+	// }
+	// printf(BLUE "Debug:"RESET " Successfully recvfrom() server. \n");
 
 	printf("Debug: BBPeer disconnected.\n");
 	return 0;
@@ -110,7 +117,7 @@ int createClientSocket(char *_hostName, int _port, struct sockaddr_in *_dest)
 		sockfd = ERROR;
 	}
 
-	freeaddrinfo(results);
+	// freeaddrinfo(results);
 	return sockfd;
 }
 
@@ -130,4 +137,26 @@ int bindClientSocket(int _sockfd, int _port)
 	}
 
 	return SUCCESS;
+}
+
+void requestpeer(int _sockfd, struct sockaddr_in *_peer, const struct sockaddr *_server)
+{
+    const char message[] = "connect";
+    int len;
+
+    clear();
+    printf("Waiting for the token ring to form...");
+
+    /* send the request */
+    len = sendto(_sockfd, message, strlen(message), 0,
+                 server, sizeof (struct sockaddr_in));
+    if (strlen(message) != len)
+        fail(__FILE__, __LINE__);
+
+    /* handle the response */
+    recvfrom(_sockfd, &ring, sizeof ring, 0, NULL, 0);
+    puts("Received peer from the server. Negotiating first token holder...");
+
+    /* pause so that all peers have time to get the server message */
+    sleep(1);
 }
