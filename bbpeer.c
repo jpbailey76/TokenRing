@@ -199,8 +199,9 @@ void handshake(int _sockfd)
   {
   	printf(BLUE"Debug: "RESET
   			 "recvfrom() - sockfd = [%d].\n", _sockfd);
+    
     // Receive a peer address for comparison to our own.
-    // len = recvfrom(_sockfd, &peer, sizeof peer, 0, NULL, 0);
+    len = recvfrom(_sockfd, &peer, sizeof peer, 0, NULL, 0);
 
 
     printf(BLUE"Debug: "RESET
@@ -211,7 +212,7 @@ void handshake(int _sockfd)
       break;
     else if (sizeof (peer) != len)
     {
-    	perror(RED"Error: "RESET "requestpeer() - Invalid message length.\n");
+    	perror(RED"Error: "RESET "handshake() - Invalid message length.\n");
     	exit(EXIT_FAILURE);
     }
 
