@@ -182,11 +182,11 @@ void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
 		char ipAddress[INET_ADDRSTRLEN];
 
     // display the client address and port
-    if (NULL == inet_ntop(AF_INET, peerArray[i].client->sin_addr, ipAddress, sizeof ipAddress))
+    if (NULL == inet_ntop(AF_INET, _peerArray[i].client->sin_addr, ipAddress, sizeof ipAddress))
         perror(RED"Server Error: "RESET 
         	     "runServer() - Address printing failed. \n");
 
-		printf(YELLOW"\nA host from %s:%d has connected with:"RESET"\t%s\t\n", ipAddress, peerArray[i].client->sin_port, buffer);
+		printf(YELLOW"\nA host from %s:%d has connected with:"RESET"\t%s\t\n", ipAddress, _peerArray[i].client->sin_port, buffer);
 	}
 
 	for (i = 0; i < _server->numClients; i++)
