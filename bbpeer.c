@@ -338,14 +338,14 @@ int writeToBulletin()
 				"Unable to open file.\n");
 		return ERROR;
 	}
-  while(!feof(fp))
-	{
-	  ch = fgetc(fp);
-	  if(ch == '\n')
-	  {
-	    messageNumber++;
-	  }
-	}
+ //  while(!feof(fp))
+	// {
+	//   ch = fgetc(fp);
+	//   if(ch == '\n')
+	//   {
+	//     messageNumber++;
+	//   }
+	// }
 
   const char headerSpecifier[] = "%s %d: %s";
 	const char messageHeader[] = "Message #"; 
