@@ -61,7 +61,7 @@ int main(int argc, char **argv)
   handshake(sockfd);
 
   // Start token passing thread.
-  pthread_create(&token_Thread, NULL, tokenPassing_Thread, NULL);
+  pthread_create(&token_Thread, NULL, tokenPassing_Thread, sockfd);
 
   // Display bulletin options
   displayMenu();  
@@ -241,10 +241,11 @@ int compare(struct sockaddr_in *left, struct sockaddr_in *right)
     return 1;
 }
 
-void * tokenPassing_Thread(void *arg)
+void * tokenPassing_Thread(void *_sockfd)
 {
   ClientData peer;
   ssize_t len;
+  int sockfd = _sockfd;
 
   // Pass the token around 
   sendto(sockfd, &TOKEN, sizeof TOKEN, 0,
