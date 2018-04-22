@@ -196,6 +196,7 @@ void handshake(int _sockfd)
    * token from a peer.
    */
   while (1) 
+  {
   	printf(BLUE"Debug: "RESET
   			 "recvfrom() - sockfd = [%d].\n", _sockfd);
     // Receive a peer address for comparison to our own.
