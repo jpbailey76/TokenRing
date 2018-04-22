@@ -51,9 +51,12 @@ int main(int argc, char **argv)
 	if (bindClientSocket(sockfd, 0) == ERROR)
 		return ERROR;
 
+	// Gather peer info
 	struct sockaddr_in peer;
 	requestpeer(sockfd, server->ai_addr);
 
+	// Determine who gets the token first
+  handshake();
 
 	// Join the server
 	// ssize_t numBytesSent;
@@ -145,7 +148,7 @@ void requestpeer(int _sockfd, const struct sockaddr *_server)
     const char message[] = "connect";
     int len;
 
-    printf("Waiting for the token ring to form...");
+    printf("Waiting for the token ring to form...\n");
 
     /* send the request */
     len = sendto(_sockfd, message, strlen(message), 0,
@@ -163,4 +166,69 @@ void requestpeer(int _sockfd, const struct sockaddr *_server)
 
     /* pause so that all peers have time to get the server message */
     sleep(1);
+}
+
+void handshake()
+{
+	struct sockaddr_in peer;
+  ssize_t len;
+  int comparison;
+
+  // Send address to the peer 
+  sendto(sockfd, &ring.client, sizeof ring.client, 0,
+         (struct sockaddr *) &ring.peer, sizeof ring.peer);
+
+  /*
+   * Repeat the following until we decide to start the token or we get the
+   * token from a peer.
+   */
+  while (true) 
+  {
+    // Receive a peer address for comparison to our own.
+    len = recvfrom(sockfd, &peer, sizeof peer, 0, NULL, 0);
+
+    // Token received
+    if (sizeof (uint32_t) == len)
+      break;
+    else if (sizeof (peer) != len)
+    {
+    	perror(RED"Error: "RESET "requestpeer() - Invalid message length.\n");
+    	exit(EXIT_FAILURE);
+    }
+
+    /*
+     * We received a peer address the must be compared to our own. If it is
+     * our local address, then we had the lowest value and get the token
+     * first. Otherwise, we forward any addresses lower than our own.
+     */
+    comparison = compare(&ring.client, &peer);
+    if (0 == comparison) 
+    {
+      puts("Initial possession of the token\n");
+      break;
+    } else if (0 < comparison) 
+    {
+      puts("Forwarding a lower peer address...");
+      sendto(sockfd, &peer, sizeof peer, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
+    } 
+  }
+}
+
+int compare(struct sockaddr_in *left, struct sockaddr_in *right)
+{
+    if (left->sin_addr.s_addr < right->sin_addr.s_addr) 
+    {
+      return -1;
+    } 
+    else if (left->sin_addr.s_addr == right->sin_addr.s_addr) 
+    {
+      if (left->sin_port < right->sin_port)
+        return -1;
+      else if (left->sin_port == right->sin_port)
+        return 0;
+      else
+        return 1;
+    }
+
+    return 1;
 }

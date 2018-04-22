@@ -15,4 +15,14 @@ int bindClientSocket(int sockfd, int port);
 
 void requestpeer(int sockfd, const struct sockaddr *server);
 
+void handshake();
+
+/**
+ * Compares two IP addresses 
+ * @param  left  [description]
+ * @param  right [description]
+ * @return       [description]
+ */
+int compare(struct sockaddr_in *left, struct sockaddr_in *right);
+
 #endif // BBPEER_H_
