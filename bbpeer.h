@@ -15,7 +15,7 @@ int bindClientSocket(int sockfd, int port);
 
 void requestpeer(int sockfd, const struct sockaddr *server);
 
-void handshake();
+void handshake(int sockfd);
 
 /**
  * Compares two IP addresses 

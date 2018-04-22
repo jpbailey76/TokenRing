@@ -56,7 +56,7 @@ int main(int argc, char **argv)
 	requestpeer(sockfd, server->ai_addr);
 
 	// Determine who gets the token first
-  handshake();
+  handshake(sockfd);
 
 	// Join the server
 	// ssize_t numBytesSent;
@@ -168,24 +168,24 @@ void requestpeer(int _sockfd, const struct sockaddr *_server)
     sleep(1);
 }
 
-void handshake()
+void handshake(int _sockfd)
 {
 	struct sockaddr_in peer;
   ssize_t len;
   int comparison;
 
   // Send address to the peer 
-  sendto(sockfd, &ring.client, sizeof ring.client, 0,
+  sendto(_sockfd, &ring.client, sizeof ring.client, 0,
          (struct sockaddr *) &ring.peer, sizeof ring.peer);
 
   /*
    * Repeat the following until we decide to start the token or we get the
    * token from a peer.
    */
-  while (true) 
+  while (1) 
   {
     // Receive a peer address for comparison to our own.
-    len = recvfrom(sockfd, &peer, sizeof peer, 0, NULL, 0);
+    len = recvfrom(_sockfd, &peer, sizeof peer, 0, NULL, 0);
 
     // Token received
     if (sizeof (uint32_t) == len)
@@ -209,7 +209,7 @@ void handshake()
     } else if (0 < comparison) 
     {
       puts("Forwarding a lower peer address...");
-      sendto(sockfd, &peer, sizeof peer, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
+      sendto(_sockfd, &peer, sizeof peer, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
     } 
   }
 }
