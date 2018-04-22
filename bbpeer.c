@@ -90,7 +90,7 @@ void verifyInput(int argc, char **argv)
 	if (argc < 4) 
 	{
     fprintf(stderr, RED"Input Error: "RESET "Anticipated input -->"
-				"./bbpeer <Server Hostname> <Port>\n");
+				"./bbpeer <Server Hostname> <Port> <file>\n");
     exit(EXIT_FAILURE);
   }
 
