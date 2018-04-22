@@ -303,16 +303,17 @@ void displayMenu()
 
     if(fgets(input, sizeof input, stdin) != NULL)
 		{
-			printf("input = [%s]\n", input);
+			char *inputTok = strtok(input, "\n");
+			printf("input = [%s] \n", inputTok);
 
-			if(strcmp(input, "1") == 0)
+			if(strcmp(inputTok, "1") == 0)
 		  	writeToBulletin();
-			else if(strcmp(input, "2") == 0)
+			else if(strcmp(inputTok, "2") == 0)
 			{
 				printf("Not added yet.\n");
 		    //readFromBulletin();
 			}
-			else if(strcmp(input, "3") == 0)	
+			else if(strcmp(inputTok, "3") == 0)	
 			{
 				printf("Not added yet.\n");
 				//exit();
