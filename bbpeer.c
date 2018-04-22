@@ -333,7 +333,7 @@ int writeToBulletin()
 
   if(fgets(message, sizeof message, stdin) != NULL)
 	{
-		File *fp;
+		FILE *fp;
 		fp = fopen(BULLETIN_BOARD, "w");
 		if (fp != NULL)
 		{
