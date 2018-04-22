@@ -328,7 +328,7 @@ int writeToBulletin()
   char message[256];
   int messageNumber = 1;
 
-  const char headerSpecifier[] = "%s %d: %s"
+  const char headerSpecifier[] = "%s %d: %s";
 	const char messageHeader[] = "Message #"; 
 
   fputs(header, stdout);
