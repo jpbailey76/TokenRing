@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -g -Wall
+CFLAGS = -g -Wall -lpthread
 OBJECTS = bbserver bbpeer
 all: $(OBJECTS)
 TODELETE = *.o
