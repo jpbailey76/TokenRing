@@ -253,7 +253,7 @@ void handshake()
     else if (comparison > 0) 
     {
       printf("Forwarding a lower peer address...\n");
-      sendto(sockfd, &peer, sizeof peer, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
+      sendto(_sockfd, &peer, sizeof peer, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
     } 
   }
 }
