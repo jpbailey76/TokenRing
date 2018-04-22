@@ -303,11 +303,9 @@ void displayMenu()
 
     if(fgets(input, sizeof input, stdin) != NULL)
 		{
-			char inputTok = strtok(input, "\n");
-			int inputInt = inputTok - '0';
-			printf("input = [%d]\n", inputInt);
-		  switch (inputInt) {
-		  case '1':
+			printf("input = [%s]\n", input);
+		  switch (input) {
+		  case "1":
 		  		writeToBulletin();
 		      break;
 
