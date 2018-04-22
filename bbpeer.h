@@ -12,7 +12,7 @@ typedef struct ClientData
 
 void verifyInput(int argc, char **argv);
 
-struct addrinfo getServerInfo(const char *addr, const char *port);
+struct addrinfo* getServerInfo(const char *addr, const char *port);
 
 int createClientSocket(char *hostName, int port, struct sockaddr_in *dest);
 
