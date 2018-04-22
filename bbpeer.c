@@ -245,7 +245,7 @@ void * tokenPassing_Thread(void *_sockfd)
 {
   ClientData peer;
   ssize_t len;
-  int sockfd = (int)_sockfd;
+  int sockfd = (intptr_t)_sockfd;
 
   // Pass the token around 
   sendto(sockfd, &TOKEN, sizeof TOKEN, 0,
