@@ -305,14 +305,14 @@ void displayMenu()
 		{
 			printf("input = [%s]\n", input);
 
-			if(input == "1")
-		  		writeToBulletin();
-			else if(input == "2")
+			if(strcmp(input, "1") == 0)
+		  	writeToBulletin();
+			else if(strcmp(input, "2") == 0)
 			{
 				printf("Not added yet.\n");
 		    //readFromBulletin();
 			}
-			else if(input == "3")	
+			else if(strcmp(input, "3") == 0)	
 			{
 				printf("Not added yet.\n");
 				//exit();
