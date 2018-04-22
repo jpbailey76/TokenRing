@@ -27,6 +27,8 @@ int compare(struct sockaddr_in *left, struct sockaddr_in *right);
 
 void * tokenPassing_Thread(void *arg);
 
+void peerExit(ClientData *request);
+
 void displayMenu();
 
 #endif // BBPEER_H_

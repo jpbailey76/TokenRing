@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <conio.h>
 
 // Project
 #include "bbpeer.h"
@@ -259,7 +260,7 @@ void * tokenPassing_Thread(void *_sockfd)
     // Check if client is requesting a leave by sending its address
     // or if it's passing the token.
     if (sizeof (ClientData) == len) 
-      handlepeerexit(&peer);
+      peerExit(&peer);
     else if (sizeof TOKEN == len) 
       sendto(sockfd, &TOKEN, sizeof TOKEN, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
   }
@@ -269,6 +270,23 @@ void * tokenPassing_Thread(void *_sockfd)
          (struct sockaddr *) &ring.peer, sizeof ring.peer);
 
   pthread_exit(EXIT_SUCCESS);
+}
+
+void peerExit(ClientData *request)
+{
+  // Our neighbor is leaving, so send to the peer after them.
+  if (0 == compare(&request->client, &ring.peer)) 
+  {
+    // Swap our neighbor with their neighbor and pass the token
+    // to the new neighbor.
+    memcpy(&ring.peer, &request->peer, sizeof ring.peer);
+    sendto(sockfd, &TOKEN, sizeof TOKEN, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
+  } 
+  else 
+  {
+  	// Pass around the leave request.
+    sendto(sockfd, request, sizeof *request, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
+  }
 }
 
 void displayMenu()
@@ -282,10 +300,9 @@ void displayMenu()
         "\n"
         "Selection (1-3): ";
 
-
-  while (true) 
+  while (1) 
   {
-    fputs(MENU, stdout);
+    fputs(menu, stdout);
     fflush(stdout);
 
     switch (getch()) {
