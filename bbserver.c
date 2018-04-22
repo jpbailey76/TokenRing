@@ -29,13 +29,18 @@ int main(int argc, char **argv)
 	PortNT server;
 	verifyInput(argc, argv, &server);
 
-	printf("DEBUG: numPeers = [%d]\tport = [%d]\n", server.numClients, server.port);
+	printf(BLUE"DEBUG: "RESET
+		"numPeers = [%d]\tport = [%d]\n", server.numClients, server.port);
 
 	if ((sockfd = createServer(&server)) == ERROR)
 		exit(EXIT_FAILURE);
 
 	// Create peer array and run server.
   PeerT *peerArray = new_parray(&server);
+
+  printf(BLUE"DEBUG: "RESET
+  			"Client address = [%s] Peer address = [%s]\n", inet_ntoa(peerArray.client->sin_addr), inet_ntoa(peerArray.peer->sin_addr));
+  
 	runServer(sockfd, peerArray, &server);
 
 	printf("Server Closed.\n");
@@ -85,10 +90,10 @@ int createServer(PortNT *server)
 	char port[32];
 	sprintf(port, "%d", server->port);
 
-	memset((void *)&hints, 0, (size_t) sizeof(hints)); // make sure the struct is empty
-	hints.ai_family = AF_INET;     // IPv4 or IPv6
-	hints.ai_socktype = SOCK_DGRAM;  // UDP sockets
-	hints.ai_flags = AI_PASSIVE;     // fill in my IP for me
+	memset((void *)&hints, 0, (size_t) sizeof(hints));
+	hints.ai_family = AF_INET;    
+	hints.ai_socktype = SOCK_DGRAM;  
+	hints.ai_flags = AI_PASSIVE;     
 
 	if ((status = getaddrinfo(NULL, port, &hints, &serverInfo)) != 0) 
 	{
