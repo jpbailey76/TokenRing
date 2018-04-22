@@ -8,7 +8,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <termios.h>
 
 // Project
 #include "bbpeer.h"
@@ -305,7 +304,7 @@ void displayMenu()
     fputs(menu, stdout);
     fflush(stdout);
 
-    switch (getch()) {
+    switch (getchar()) {
     case '1':
         break;
 
