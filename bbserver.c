@@ -161,8 +161,7 @@ void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
 {
 	char buffer[BUFFER_SIZE];
 	char responseBuff[BUFFER_SIZE];
-	char ipBuffer[INET6_ADDRSTRLEN];
-	struct sockaddr_storage clientAddr[_server->numClients];
+	char ipAddress[INET_ADDRSTRLEN];
 	socklen_t addr_len;
 	int numBytes = 0;
 
@@ -179,13 +178,11 @@ void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
 			perror(RED"Server Error: "RESET "recvfrom() failed. \n");
 			exit(1);
 		}
-		char ipAddress[INET_ADDRSTRLEN];
 
-    // display the client address and port
+    // The ipAddress:Port
     if (NULL == inet_ntop(AF_INET, &_peerArray[i].client.sin_addr, ipAddress, sizeof ipAddress))
         perror(RED"Server Error: "RESET 
-        	     "runServer() - Address printing failed. \n");
-
+	     		"runServer() - Address printing failed. \n");
 		printf(YELLOW"\nA host from %s:%d has connected with:"RESET"\t%s\t\n", ipAddress, _peerArray[i].client.sin_port, buffer);
 	}
 
