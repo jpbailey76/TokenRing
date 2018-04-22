@@ -365,7 +365,7 @@ int getNumMessages()
 
 	// Open file and count messages
 	FILE *fp;
-	fp = fopen(BULLETIN_BOARD, "r");
+	fp = fopen(BULLETIN_BOARD, "w");
 	if(fp == NULL)
 	{
 		printf(RED"Error: "RESET
