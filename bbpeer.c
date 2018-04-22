@@ -334,13 +334,15 @@ int writeToBulletin()
   if(fgets(message, sizeof message, stdin) != NULL)
 	{
 		FILE *fp;
-		fp = fopen(BULLETIN_BOARD, "w");
+		fp = fopen(BULLETIN_BOARD, "a");
 		if (fp != NULL)
 		{
-			const char encodedMessage[] = 
-						"Message # " messageNumber ": " message;
+			const char messageHeader[] = 
+						"Message # " 
+			const char buffer[256];
 
-		  fputs(encodedMessage, fp);
+			sprintf(buffer, messageHeader, messageNumber, message);
+			fprintf(fp, buffer);
 		  fclose(fp);
 		}
 		else
