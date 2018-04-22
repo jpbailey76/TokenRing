@@ -338,7 +338,7 @@ int writeToBulletin()
 		if (fp != NULL)
 		{
 			const char messageHeader[] = "Message # "; 
-			const char buffer[256];
+			char buffer[256];
 
 			sprintf(buffer, messageHeader, messageNumber, message);
 			fprintf(fp, buffer);
