@@ -118,42 +118,42 @@ struct addrinfo* getServerInfo(const char *_address, const char *_port)
 
 int createClientSocket(char *_hostName, int _port, struct sockaddr_in *_dest)
 {
-	struct addrinfo hints;
-	struct addrinfo *p;
-	char portBuffer[6];
+	// struct addrinfo hints;
+	// struct addrinfo *p;
+	// char portBuffer[6];
 
-	// Clear socket
-	memset(_dest, 0, sizeof(struct sockaddr_in));
-	_dest->sin_port = htons((uint16_t)_port);
-	_dest->sin_family = AF_INET;
+	// // Clear socket
+	// memset(_dest, 0, sizeof(struct sockaddr_in));
+	// _dest->sin_port = htons((uint16_t)_port);
+	// _dest->sin_family = AF_INET;
 	
-	// Get the host information.
-	bzero(&hints, sizeof(struct addrinfo));
-	hints.ai_family = AF_INET;
-	hints.ai_socktype = SOCK_DGRAM;
-	hints.ai_flags = AI_PASSIVE;
-	snprintf(portBuffer, sizeof(portBuffer), "%i", _port);
-	if (getaddrinfo(_hostName, portBuffer, &hints, &server) != 0)
-	{
-		perror(RED"Client Error: "RESET "getaddrinfo() - failed to get host information.\n");
-		return ERROR;
-	}
+	// // Get the host information.
+	// bzero(&hints, sizeof(struct addrinfo));
+	// hints.ai_family = AF_INET;
+	// hints.ai_socktype = SOCK_DGRAM;
+	// hints.ai_flags = AI_PASSIVE;
+	// snprintf(portBuffer, sizeof(portBuffer), "%i", _port);
+	// if (getaddrinfo(_hostName, portBuffer, &hints, &server) != 0)
+	// {
+	// 	perror(RED"Client Error: "RESET "getaddrinfo() - failed to get host information.\n");
+	// 	return ERROR;
+	// }
 
-	// Connect
-	int sockfd = ERROR;
-	for (p = server; p != NULL; p = p->ai_next)
-	{
-		sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
-		if (sockfd > 0)
-		{
-			memcpy(_dest, p->ai_addr, p->ai_addrlen);
-			break;
-		}
-		sockfd = ERROR;
-	}
+	// // Connect
+	// int sockfd = ERROR;
+	// for (p = server; p != NULL; p = p->ai_next)
+	// {
+	// 	sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
+	// 	if (sockfd > 0)
+	// 	{
+	// 		memcpy(_dest, p->ai_addr, p->ai_addrlen);
+	// 		break;
+	// 	}
+	// 	sockfd = ERROR;
+	// }
 
-	// freeaddrinfo(server);
-	return sockfd;
+	// // freeaddrinfo(server);
+	// return sockfd;
 }
 
 int bindClientSocket(int _sockfd, int _port)
