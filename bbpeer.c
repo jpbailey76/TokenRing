@@ -326,21 +326,22 @@ int writeToBulletin()
 	const char header[] =
         YELLOW"Enter Message: "RESET;
   char message[256];
-  char messageNumber[] = "1";
+  int messageNumber = 1;
+
+  const char headerSpecifier[] = "%s %d: %s"
+	const char messageHeader[] = "Message #"; 
 
   fputs(header, stdout);
   fflush(stdout);
-
   if(fgets(message, sizeof message, stdin) != NULL)
 	{
 		FILE *fp;
 		fp = fopen(BULLETIN_BOARD, "a");
 		if (fp != NULL)
 		{
-			const char messageHeader[] = "Message # "; 
 			char buffer[256];
 
-			sprintf(buffer, messageHeader, messageNumber, message);
+			sprintf(buffer, headerSpecifier, messageHeader, messageNumber, message);
 			fprintf(fp, buffer);
 		  fclose(fp);
 		}
