@@ -170,10 +170,12 @@ void requestpeer(int _sockfd, const struct sockaddr *_server)
         
     /* handle the response */
     recvfrom(_sockfd, &ring, sizeof ring, 0, NULL, 0);
-    puts("Received peer from the server. Negotiating first token holder...");
+    printf("Received peer from the server. Negotiating first token holder...\n");
 
     /* pause so that all peers have time to get the server message */
     sleep(1);
+
+    printf(BLUE"Debug: "RESET"After sleep\n");
 }
 
 void handshake(int _sockfd)
@@ -212,11 +214,11 @@ void handshake(int _sockfd)
     comparison = compare(&ring.client, &peer);
     if (0 == comparison) 
     {
-      puts("Initial possession of the token\n");
+      printf("Initial possession of the token\n");
       break;
     } else if (0 < comparison) 
     {
-      puts("Forwarding a lower peer address...");
+      printf("Forwarding a lower peer address...\n");
       sendto(_sockfd, &peer, sizeof peer, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
     } 
   }
