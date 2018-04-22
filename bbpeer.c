@@ -50,7 +50,7 @@ int main(int argc, char **argv)
 		return ERROR;
 
 	struct sockaddr_in peer;
-	requestpeer(sockfd, &peer, destination.sin_addr);
+	// requestpeer(sockfd, &peer, destination.sin_addr);
 
 
 	// Join the server
