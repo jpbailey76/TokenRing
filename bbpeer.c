@@ -97,7 +97,7 @@ void verifyInput(int argc, char **argv)
   BULLETIN_BOARD = argv[3];
 }
 
-struct addrinfo getServerInfo(const char *_address, const char *_port)
+struct addrinfo* getServerInfo(const char *_address, const char *_port)
 {
 	int status;
 	struct addrinfo hints, *res;
