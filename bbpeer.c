@@ -324,11 +324,11 @@ void displayMenu()
 
 int writeToBulletin()
 {
-	const char message[] =
+	const char header[] =
         YELLOW"Enter Message: "RESET;
   char message[256];
 
-  fputs(menu, stdout);
+  fputs(header, stdout);
   fflush(stdout);
 
   if(fgets(message, sizeof message, stdin) != NULL)
@@ -337,8 +337,8 @@ int writeToBulletin()
 		fp = fopen(BULLETIN_BOARD, "w");
 		if (fp != NULL)
 		{
-		  fputs (message, fp);
-		  fclose (pFile);
+		  fputs(message, fp);
+		  fclose(fp);
 		}
 		else
 		{
