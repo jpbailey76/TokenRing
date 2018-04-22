@@ -160,7 +160,6 @@ in_port_t getPort(struct sockaddr *_sa)
 void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
 {
 	char buffer[BUFFER_SIZE];
-	char responseBuff[BUFFER_SIZE];
 	char ipAddress[INET_ADDRSTRLEN];
 	socklen_t addr_len;
 	int numBytes = 0;
@@ -197,7 +196,7 @@ void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
       if (7 != len)
           printf(RED"Error: "RESET
           	 "runServer() - Message length invalid\n"
-          	 "Expected: [7]\tActual: [%d]\n", len);
+          	 "Expected: [7]\tActual: [%zu]\n", len);
   }
 
 	close(_sockfd);
