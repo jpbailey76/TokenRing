@@ -199,16 +199,12 @@ void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
   {
       j = (i + 1) % _server->numClients;
       memcpy(&_peerArray[i].peer, &_peerArray[j].client, sizeof (struct sockaddr_in));
-      printf("%08X:%d\t%08X:%d\n\n",
-             _peerArray[i].client.sin_addr.s_addr,
-             _peerArray[i].client.sin_port,
-             _peerArray[i].peer.sin_addr.s_addr,
-             _peerArray[i].peer.sin_port);
       len = sendto(_sockfd, &_peerArray[i], sizeof (PeerT), 0,
               (struct sockaddr *) &_peerArray[i].client, sizeof (struct sockaddr_in));
       if (7 != len)
           perror(RED"Error: "RESET
-          	 "runServer() - Message length invalid\n");
+          	 "runServer() - Message length invalid\n"
+          	 "Expected: [7]\tActual: [%d]\n", len);
   }
 
 	close(_sockfd);
