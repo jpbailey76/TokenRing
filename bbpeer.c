@@ -25,6 +25,8 @@
 
 /** local host and peer address information */
 static ClientData ring;
+struct addrinfo *server;
+
 
 int main(int argc, char **argv) 
 {
@@ -50,7 +52,7 @@ int main(int argc, char **argv)
 		return ERROR;
 
 	struct sockaddr_in peer;
-	// requestpeer(sockfd, &peer, destination.sin_addr);
+	requestpeer(sockfd, destination.sin_addr);
 
 
 	// Join the server
@@ -83,7 +85,6 @@ int main(int argc, char **argv)
 int createClientSocket(char *_hostName, int _port, struct sockaddr_in *_dest)
 {
 	struct addrinfo hints;
-	struct addrinfo *results;
 	struct addrinfo *p;
 	char portBuffer[6];
 
@@ -98,7 +99,7 @@ int createClientSocket(char *_hostName, int _port, struct sockaddr_in *_dest)
 	hints.ai_socktype = SOCK_DGRAM;
 	hints.ai_flags = AI_PASSIVE;
 	snprintf(portBuffer, sizeof(portBuffer), "%i", _port);
-	if (getaddrinfo(_hostName, portBuffer, &hints, &results) != 0)
+	if (getaddrinfo(_hostName, portBuffer, &hints, &server) != 0)
 	{
 		perror(RED"Client Error: "RESET "getaddrinfo() - failed to get host information.\n");
 		return ERROR;
@@ -106,7 +107,7 @@ int createClientSocket(char *_hostName, int _port, struct sockaddr_in *_dest)
 
 	// Connect
 	int sockfd = ERROR;
-	for (p = results; p != NULL; p = p->ai_next)
+	for (p = server; p != NULL; p = p->ai_next)
 	{
 		sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
 		if (sockfd > 0)
@@ -117,7 +118,7 @@ int createClientSocket(char *_hostName, int _port, struct sockaddr_in *_dest)
 		sockfd = ERROR;
 	}
 
-	// freeaddrinfo(results);
+	// freeaddrinfo(server);
 	return sockfd;
 }
 
