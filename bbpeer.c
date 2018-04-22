@@ -365,11 +365,10 @@ int getNumMessages()
 
 	// Open file and count messages
 	FILE *fp;
-	fp = fopen(BULLETIN_BOARD, "w");
+	fp = fopen(BULLETIN_BOARD, "r");
 	if(fp == NULL)
 	{
-		printf(RED"Error: "RESET
-				"Unable to open file.\n");
+		printf(YELLOW"Board"RESET "%s" YELLOW" has been created. Try again to enter your message.\n"RESET, BULLETIN_BOARD);
 		return ERROR;
 	}
 
