@@ -274,17 +274,17 @@ void * tokenPassing_Thread(void *_sockfd)
 void peerExit(int _sockfd, ClientData *_request)
 {
   // Our neighbor is leaving, so send to the peer after them.
-  if (0 == compare(&request->client, &ring.peer)) 
+  if (0 == compare(&_request->client, &ring.peer)) 
   {
     // Swap our neighbor with their neighbor and pass the token
     // to the new neighbor.
-    memcpy(&ring.peer, &request->peer, sizeof ring.peer);
-    sendto(sockfd, &TOKEN, sizeof TOKEN, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
+    memcpy(&ring.peer, &_request->peer, sizeof ring.peer);
+    sendto(_sockfd, &TOKEN, sizeof TOKEN, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
   } 
   else 
   {
   	// Pass around the leave request.
-    sendto(sockfd, request, sizeof *request, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
+    sendto(_sockfd, _request, sizeof *_request, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
   }
 }
 
