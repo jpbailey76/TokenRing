@@ -203,7 +203,8 @@ void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
       len = sendto(_sockfd, &_peerArray[i], sizeof (PeerT), 0,
               (struct sockaddr *) &_peerArray[i].client, sizeof (struct sockaddr_in));
       if (7 != len)
-          perror("Error: Message length invalid\n");
+          perror(RED"Error: "RESET
+          	 "runServer() - Message length invalid\n");
   }
 
 	close(_sockfd);
