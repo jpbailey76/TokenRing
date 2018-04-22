@@ -8,7 +8,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <conio.h>
+#include <termios.h>
 
 // Project
 #include "bbpeer.h"
