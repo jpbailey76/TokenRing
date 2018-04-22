@@ -38,10 +38,10 @@ int main(int argc, char **argv)
 	// Create peer array and run server.
   PeerT *peerArray = new_parray(&server);
 
-  printf(BLUE"DEBUG: "RESET
-  			"Client address = [%s] Peer address = [%s]\n", inet_ntoa(peerArray->client.sin_addr), inet_ntoa(peerArray->peer.sin_addr));
-
 	runServer(sockfd, peerArray, &server);
+
+	printf(BLUE"\nDEBUG: "RESET
+  			"Client address = [%s] Peer address = [%s]\n", inet_ntoa(peerArray->client.sin_addr), inet_ntoa(peerArray->peer.sin_addr));
 
 	printf("Server Closed.\n");
 	return 0;
