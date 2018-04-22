@@ -326,6 +326,7 @@ int writeToBulletin()
 	const char header[] =
         YELLOW"Enter Message: "RESET;
   char message[256];
+  char ch;
   int messageNumber = 0;
 
   // Open file and count messages
