@@ -182,7 +182,7 @@ void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
 		char ipAddress[INET_ADDRSTRLEN];
 
     // display the client address and port
-    if (NULL == inet_ntop(AF_INET, _peerArray[i].client.sin_addr, ipAddress, sizeof ipAddress))
+    if (NULL == inet_ntop(AF_INET, &_peerArray[i].client.sin_addr, ipAddress, sizeof ipAddress))
         perror(RED"Server Error: "RESET 
         	     "runServer() - Address printing failed. \n");
 
