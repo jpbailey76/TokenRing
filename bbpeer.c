@@ -304,7 +304,6 @@ void displayMenu()
     if(fgets(input, sizeof input, stdin) != NULL)
 		{
 			char *inputTok = strtok(input, "\n");
-			printf("input = [%s] \n", inputTok);
 
 			if(strcmp(inputTok, "1") == 0)
 		  	writeToBulletin();
@@ -327,8 +326,7 @@ int writeToBulletin()
 	const char header[] =
         YELLOW"Enter Message: "RESET;
   char message[256];
-
-  printf("Writing to bulletin\n");
+  char messageNumber[] = "1";
 
   fputs(header, stdout);
   fflush(stdout);
@@ -339,7 +337,10 @@ int writeToBulletin()
 		fp = fopen(BULLETIN_BOARD, "w");
 		if (fp != NULL)
 		{
-		  fputs(message, fp);
+			const char encodedMessage[] = 
+						"Message # " messageNumber ": " message;
+
+		  fputs(encodedMessage, fp);
 		  fclose(fp);
 		}
 		else
