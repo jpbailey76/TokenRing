@@ -306,7 +306,7 @@ void displayMenu()
 			char inputTok = strtok(input, "\n");
 			printf("input = [%s]\n", inputTok);
 		  switch (atoi(inputTok)) {
-		  case "1":
+		  case '1':
 		  		writeToBulletin();
 		      break;
 
