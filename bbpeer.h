@@ -34,4 +34,6 @@ void peerExit(int sockfd, ClientData *request);
 
 void displayMenu();
 
+int writeToBulletin();
+
 #endif // BBPEER_H_

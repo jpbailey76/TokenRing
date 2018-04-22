@@ -305,9 +305,11 @@ void displayMenu()
 		{
 		  switch (atoi(input)) {
 		  case '1':
+		  		writeToBulletin();
 		      break;
 
 		  case '2':
+		  		// readFromBulletin();
 		      break;
 
 		  case '3':
@@ -318,5 +320,35 @@ void displayMenu()
 		  }
 		}
   }   
+}
 
+int writeToBulletin()
+{
+	const char message[] =
+        YELLOW"Enter Message: "RESET;
+  char message[256];
+
+  fputs(menu, stdout);
+  fflush(stdout);
+
+  if(fgets(message, sizeof message, stdin) != NULL)
+	{
+		File *fp;
+		fp = fopen(BULLETIN_BOARD, "w");
+		if (fp != NULL)
+		{
+		  fputs (message, fp);
+		  fclose (pFile);
+		}
+		else
+		{
+			printf(RED"Error: "RESET
+				"Unable to open file.\n");
+			return ERROR;
+		}
+		printf(YELLOW"Message Addeded.\n"RESET);
+		return SUCCESS;
+	}
+
+	return ERROR;
 }
