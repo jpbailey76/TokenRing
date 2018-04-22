@@ -23,10 +23,12 @@
 #define YELLOW   "\x1B[33m"
 #define RESET "\x1B[0m"
 
-/** local host and peer address information */
+
 static ClientData ring;
 struct addrinfo *server;
+static const uint32_t TOKEN = 0;
 
+static pthread_t token_Thread;   
 
 int main(int argc, char **argv) 
 {
@@ -57,6 +59,12 @@ int main(int argc, char **argv)
 
 	// Determine who gets the token first
   handshake(sockfd);
+
+  // Start token passing thread.
+  pthread_create(&token_Thread, NULL, tokenPassing_Thread, NULL);
+
+  // Display bulletin options
+  displayMenu();  
 
 	// Join the server
 	// ssize_t numBytesSent;
@@ -231,4 +239,67 @@ int compare(struct sockaddr_in *left, struct sockaddr_in *right)
     }
 
     return 1;
+}
+
+void * tokenPassing_Thread(void *arg)
+{
+  ClientData peer;
+  ssize_t len;
+
+  // Pass the token around 
+  sendto(sockfd, &TOKEN, sizeof TOKEN, 0,
+         (struct sockaddr *) &ring.peer, sizeof ring.peer);
+
+  while (1) 
+  {
+    // Wait for token
+    len = recvfrom(sockfd, &peer, sizeof peer, 0, NULL, 0);
+
+    // Check if client is requesting a leave by sending its address
+    // or if it's passing the token.
+    if (sizeof (ClientData) == len) 
+      handlepeerexit(&peer);
+    else if (sizeof TOKEN == len) 
+      sendto(sockfd, &TOKEN, sizeof TOKEN, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
+  }
+
+  // Leave request
+  sendto(sockfd, &ring, sizeof ring, 0,
+         (struct sockaddr *) &ring.peer, sizeof ring.peer);
+
+  pthread_exit(EXIT_SUCCESS);
+}
+
+void displayMenu()
+{
+	const char menu[] =
+        "Menu\n"
+        "\n"
+        "1. write\n"
+        "2. read#\n"
+        "3. exit\n"
+        "\n"
+        "Selection (1-3): ";
+
+
+  while (true) 
+  {
+    fputs(MENU, stdout);
+    fflush(stdout);
+
+    switch (getch()) {
+    case '1':
+        break;
+
+    case '2':
+        break;
+
+    case '3':
+        return;
+
+    default:
+        break;
+    }
+  }   
+
 }

@@ -25,4 +25,8 @@ void handshake(int sockfd);
  */
 int compare(struct sockaddr_in *left, struct sockaddr_in *right);
 
+void * tokenPassing_Thread(void *arg);
+
+void displayMenu();
+
 #endif // BBPEER_H_
