@@ -303,7 +303,7 @@ void displayMenu()
 
     if(fgets(input, sizeof input, stdin) != NULL)
 		{
-		  switch (input) {
+		  switch (atoi(input)) {
 		  case '1':
 		      break;
 
