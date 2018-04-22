@@ -186,13 +186,6 @@ void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
 		printf(YELLOW"\nA host from %s:%d has connected with:"RESET"\t%s\t\n", ipAddress, _peerArray[i].client.sin_port, buffer);
 	}
 
-	for (i = 0; i < _server->numClients; i++)
-	{
-		sendto(_sockfd, responseBuff, strlen(responseBuff), 0, (struct sockaddr*)&clientAddr[i], sizeof(struct sockaddr));
-		printf("Sending response to a host.\n ");
-	}
-
-
 	printf("Sending Token Ring Position to Clients \n");
 	size_t len;
   for (i = 0; i < _server->numClients; i++)
@@ -202,7 +195,7 @@ void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
       len = sendto(_sockfd, &_peerArray[i], sizeof (PeerT), 0,
               (struct sockaddr *) &_peerArray[i].client, sizeof (struct sockaddr_in));
       if (7 != len)
-          perror(RED"Error: "RESET
+          printf(RED"Error: "RESET
           	 "runServer() - Message length invalid\n"
           	 "Expected: [7]\tActual: [%d]\n", len);
   }
