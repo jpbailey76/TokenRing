@@ -327,6 +327,8 @@ int writeToBulletin()
         YELLOW"Enter Message: "RESET;
   char message[256];
 
+  printf("Writing to bulletin\n");
+
   fputs(header, stdout);
   fflush(stdout);
 
