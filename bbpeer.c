@@ -327,9 +327,11 @@ int writeToBulletin()
         YELLOW"Enter Message: "RESET;
   char message[256];
   char ch;
-  int messageNumber = 0;
+  int messageNumber = getNumMessages();
 
-  // Open file and count messages
+  const char headerSpecifier[] = "%s %d: %s";
+	const char messageHeader[] = "Message #"; 
+
 	FILE *fp;
 	fp = fopen(BULLETIN_BOARD, "a");
 	if(fp == NULL)
@@ -338,17 +340,6 @@ int writeToBulletin()
 				"Unable to open file.\n");
 		return ERROR;
 	}
- //  while(!feof(fp))
-	// {
-	//   ch = fgetc(fp);
-	//   if(ch == '\n')
-	//   {
-	//     messageNumber++;
-	//   }
-	// }
-
-  const char headerSpecifier[] = "%s %d: %s";
-	const char messageHeader[] = "Message #"; 
 
   fputs(header, stdout);
   fflush(stdout);
@@ -365,4 +356,32 @@ int writeToBulletin()
 	}
 
 	return ERROR;
+}
+
+int getNumMessages()
+{
+	int messageNumber;
+	char ch;
+
+	// Open file and count messages
+	FILE *fp;
+	fp = fopen(BULLETIN_BOARD, "r");
+	if(fp == NULL)
+	{
+		printf(RED"Error: "RESET
+				"Unable to open file.\n");
+		return ERROR;
+	}
+
+  while(!feof(fp))
+	{
+	  ch = fgetc(fp);
+	  if(ch == '\n')
+	  {
+	    messageNumber++;
+	  }
+	}
+
+	fclose(fp);
+	return messageNumber;
 }

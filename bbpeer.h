@@ -36,4 +36,6 @@ void displayMenu();
 
 int writeToBulletin();
 
+int getNumMessages();
+
 #endif // BBPEER_H_
