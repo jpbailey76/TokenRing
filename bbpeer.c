@@ -139,20 +139,23 @@ int bindClientSocket(int _sockfd, int _port)
 	return SUCCESS;
 }
 
-void requestpeer(int _sockfd, struct sockaddr_in *_peer, const struct sockaddr *_server)
+void requestpeer(int _sockfd, const struct sockaddr *_server)
 {
     const char message[] = "connect";
     int len;
 
-    clear();
     printf("Waiting for the token ring to form...");
 
     /* send the request */
     len = sendto(_sockfd, message, strlen(message), 0,
-                 server, sizeof (struct sockaddr_in));
+                 _server, sizeof (struct sockaddr_in));
     if (strlen(message) != len)
-        fail(__FILE__, __LINE__);
-
+    {
+    	perror(RED"Error: "RESET "requestpeer() - Invalid message length.\n");
+    	exit(EXIT_FAILURE);
+    }
+    	
+        
     /* handle the response */
     recvfrom(_sockfd, &ring, sizeof ring, 0, NULL, 0);
     puts("Received peer from the server. Negotiating first token holder...");
