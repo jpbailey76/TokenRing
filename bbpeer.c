@@ -326,13 +326,14 @@ void peerExit(int _sockfd, ClientData *_request)
 void displayMenu()
 {
 	const char menu[] =
-        "Menu\n"
+        YELLOW"\n\tMenu"RESET"\n"
+        YELLOW"===================="RESET
         "\n"
-        "1. write\n"
-        "2. read#\n"
-        "3. exit\n"
+        YELLOW"1."RESET " Write\n"
+        YELLOW"2."RESET " Read#\n"
+        YELLOW"3."RESET " Exit\n"
         "\n"
-        "Selection (1-3): ";
+        YELLOW"Selection: "RESET;
 
   while (1) 
   {
