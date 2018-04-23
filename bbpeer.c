@@ -336,7 +336,7 @@ int writeToBulletin()
   	printf(BLUE"DEBUG: "RESET
   				 "Number of messages = [%d]\n", messageNumber);
 
-  const char headerSpecifier[] = "%s %d: %s";
+  const char headerSpecifier[] = "%s%d: %s";
 	const char messageHeader[] = "Message #"; 
 
 	FILE *fp;
