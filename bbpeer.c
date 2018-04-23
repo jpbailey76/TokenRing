@@ -422,7 +422,7 @@ int readFromBulletin()
 	if(fp != NULL )
 	{
 	    char buffer[256]; 
-	    while (fgets(buffer, sizeof buffer, file) != NULL)
+	    while (fgets(buffer, sizeof buffer, fp) != NULL)
 	    {
 	        if(count == messageToView)
 	        {
