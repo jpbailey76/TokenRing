@@ -326,7 +326,6 @@ int writeToBulletin()
 	const char header[] =
         YELLOW"Enter Message: "RESET;
   char message[256];
-  char ch;
   int messageNumber = getNumMessages();
 
   if(DEBUG)
@@ -355,7 +354,7 @@ int writeToBulletin()
 		fprintf(fp, buffer);
 	  fclose(fp);
 
-		printf(YELLOW"Message Addeded.\n"RESET);
+		printf(YELLOW"Message Added.\n"RESET);
 		return SUCCESS;
 	}
 
@@ -364,7 +363,7 @@ int writeToBulletin()
 
 int getNumMessages()
 {
-	int messageNumber = 0;
+	int messageNumber = 1;
 	char ch;
 
 	// Open file and count messages
