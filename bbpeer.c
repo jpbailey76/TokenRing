@@ -384,8 +384,10 @@ int getNumMessages()
 
 	// If the file was just created assume it's on line 1.
 	if(messageNumber == -1)
+	{
 		printf("messageNumber is invalid\n");
 		return 1;
+	}
 	else
 		return messageNumber;
 }
