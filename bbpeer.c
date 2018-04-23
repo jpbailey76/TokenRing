@@ -435,7 +435,7 @@ int readFromBulletin()
 	            count++;
 	        }
 	    }
-	    fclose(file);
+	    fclose(fp);
 	}
 	else
 	{
