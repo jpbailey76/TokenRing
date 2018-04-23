@@ -196,7 +196,10 @@ void handshake()
 
     // Token received
     if (sizeof (uint32_t) == len)
+    {
+    	printf(YELLOW"Token recieved!\n"RESET);
       break;
+    }
     else if (sizeof (peer) != len)
     {
     	perror(RED"Error: "RESET 
