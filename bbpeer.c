@@ -395,7 +395,7 @@ int readFromBulletin()
 		numMessages = 1;
 
 	const char header[] =
-        YELLOW"Which message would you like to view? (1 - %d): "RESET;
+        YELLOW"\nWhich message would you like to view? (1 - %d): "RESET;
   char buffer[256];
   sprintf(buffer, header, numMessages);
 
