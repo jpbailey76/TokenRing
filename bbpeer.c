@@ -327,8 +327,11 @@ int writeToBulletin()
         YELLOW"Enter Message: "RESET;
   char message[256];
   int messageNumber = getNumMessages();
+
+  // Check if this is a new file, if so
+  // assume this is the first message.
   if (messageNumber < 0)
-  	printf("invalid message length\n");
+  	messageNumber = 1;
 
   if(DEBUG)
   	printf(BLUE"DEBUG: "RESET
@@ -383,13 +386,5 @@ int getNumMessages()
           messageNumber = messageNumber + 1;
 
 	fclose(fp);
-
-	// If the file was just created assume it's on line 1.
-	if(messageNumber < 0)
-	{
-		printf("messageNumber is invalid\n");
-		return 1;
-	}
-	else
-		return messageNumber;
+	return messageNumber;
 }
