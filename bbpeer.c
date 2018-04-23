@@ -371,7 +371,7 @@ int getNumMessages()
 	fp = fopen(BULLETIN_BOARD, "r");
 	if(fp == NULL)
 	{
-		printf(YELLOW"Board"RESET "%s" YELLOW" has been created. Try again to enter your message.\n"RESET, BULLETIN_BOARD);
+		printf(YELLOW"Board "RESET "%s" YELLOW" has been created. You may now enter your message.\n"RESET, BULLETIN_BOARD);
 		return ERROR;
 	}
 
