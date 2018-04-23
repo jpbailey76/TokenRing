@@ -364,7 +364,7 @@ int writeToBulletin()
 
 int getNumMessages()
 {
-	int messageNumber;
+	int messageNumber = 0;
 	char ch;
 
 	// Open file and count messages
@@ -376,14 +376,10 @@ int getNumMessages()
 		return ERROR;
 	}
 
-  while(!feof(fp))
-	{
-	  ch = fgetc(fp);
-	  if(ch == '\n')
-	  {
-	    messageNumber++;
-	  }
-	}
+  // Count Numlines
+  for (ch = getc(fp); ch != EOF; ch = getc(fp))
+      if (ch == '\n') 
+          messageNumber = messageNumber + 1;
 
 	fclose(fp);
 	return messageNumber;
