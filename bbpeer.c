@@ -381,5 +381,10 @@ int getNumMessages()
           messageNumber = messageNumber + 1;
 
 	fclose(fp);
-	return messageNumber;
+
+	// If the file was just created assume it's on line 1.
+	if(messageNumber == -1)
+		return 1;
+	else
+		return messageNumber;
 }
