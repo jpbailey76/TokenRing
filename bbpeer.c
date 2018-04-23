@@ -390,16 +390,28 @@ int getNumMessages()
 
 int readFromBulletin()
 {
+  char input[256];
 	int numMessages = getNumMessages();
 	if (numMessages < 0)
 		numMessages = 1;
 
+	// Display options
 	const char header[] =
         YELLOW"\nWhich message would you like to view? (1 - %d): "RESET;
   char buffer[256];
   sprintf(buffer, header, numMessages);
-
 	fputs(buffer, stdout);
 
+	// Get message to display
+	if(fgets(input, sizeof input, stdin) == NULL)
+		return ERROR;
+
+	int messageToView;
+	messageToView = atoi(input);
+
+	if(messageToView < 1 || numMessages < messageToView)
+		printf(RED"Error: "RESET
+					"Invalid message to view. Range is (1 - %d)", numMessages);
+	
 	return SUCCESS;
 }
