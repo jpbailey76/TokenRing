@@ -327,6 +327,8 @@ int writeToBulletin()
         YELLOW"Enter Message: "RESET;
   char message[256];
   int messageNumber = getNumMessages();
+  if (messageNumber < 0)
+  	printf("invalid message length\n");
 
   if(DEBUG)
   	printf(BLUE"DEBUG: "RESET
