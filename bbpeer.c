@@ -410,8 +410,39 @@ int readFromBulletin()
 	messageToView = atoi(input);
 
 	if(messageToView < 1 || numMessages < messageToView)
+	{
 		printf(RED"Error: "RESET
 					"Invalid message to view. Range is (1 - %d)", numMessages);
-	
+		return ERROR;
+	}
+
+	// Get message requested
+	FILE *fp = fopen(BULLETIN_BOARD, "r");
+	int count = 1;
+	if(fp != NULL )
+	{
+	    char buffer[256]; 
+	    while (fgets(buffer, sizeof buffer, file) != NULL)
+	    {
+	        if(count == messageToView)
+	        {
+	            printf(YELLOW"Message selected:\n"RESET);
+	            printf("%s\n", buffer);
+	            break;
+	        }
+	        else
+	        {
+	            count++;
+	        }
+	    }
+	    fclose(file);
+	}
+	else
+	{
+    printf(RED"Error: "RESET
+				"readFromBulletin() - Unable to open file.\n");
+		return ERROR;
+	}
+
 	return SUCCESS;
 }
