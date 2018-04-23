@@ -38,4 +38,6 @@ int writeToBulletin();
 
 int getNumMessages();
 
+int readFromBulletin();
+
 #endif // BBPEER_H_

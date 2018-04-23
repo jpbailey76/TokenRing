@@ -309,8 +309,7 @@ void displayMenu()
 		  	writeToBulletin();
 			else if(strcmp(inputTok, "2") == 0)
 			{
-				printf("Not added yet.\n");
-		    //readFromBulletin();
+		    readFromBulletin();
 			}
 			else if(strcmp(inputTok, "3") == 0)	
 			{
@@ -387,4 +386,20 @@ int getNumMessages()
 
 	fclose(fp);
 	return messageNumber;
+}
+
+int readFromBulletin()
+{
+	int numMessages = getNumMessages();
+	if (numMessages < 0)
+		numMessages = 1;
+
+	const char header[] =
+        YELLOW"Which message would you like to view? (1 - %d): "RESET;
+  char buffer[256];
+  sprintf(buffer, header, numMessages);
+
+	fputs(buffer, stdout);
+
+	return SUCCESS;
 }
