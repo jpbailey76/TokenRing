@@ -677,7 +677,6 @@ int printAllFromBulletin()
 
 	// Get message requested
 	FILE *fp = fopen(BULLETIN_BOARD, "rt");
-	int count = 1;
 	char ch;
 	if(fp != NULL )
 	{
