@@ -57,9 +57,8 @@ static const bool DEBUG = true;
 
 int main(int argc, char **argv) 
 {
-	char buffer[BUFFER_SIZE];
+	// Server info
 	struct addrinfo *server;
-	struct sockaddr_in peer;
 
 	// Check the validity of the user input
 	verifyInput(argc, argv);
