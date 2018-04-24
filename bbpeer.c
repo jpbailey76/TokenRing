@@ -681,7 +681,7 @@ int printAllFromBulletin()
 	if(fp != NULL )
 	{
 	    fputs(fp, stdout);
-	    fflush();
+	    fflush(stdout);
 	    fclose(fp);
 	}
 	else
