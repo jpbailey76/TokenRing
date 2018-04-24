@@ -333,8 +333,8 @@ void * tokenPassing_Thread(void *arg)
 
   // Leave the ring.
   printf(YELLOW"You've been disconnected from the ring.\n"RESET);
-  sendto(sockfd, &ring, sizeof ring, 0,(struct sockaddr *) &ring.peer, sizeof ring.peer);
   fflush(stdout);
+  sendto(sockfd, &ring, sizeof ring, 0,(struct sockaddr *) &ring.peer, sizeof ring.peer);
   pthread_exit(SUCCESS);
 }
 
