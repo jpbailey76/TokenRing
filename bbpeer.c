@@ -406,11 +406,9 @@ int writeToBulletin()
   	printf(BLUE"DEBUG: "RESET
   				 "Number of messages before = [%d]\n", messageNumber);
   }
-  if (messageNumber < 0)
+  if (messageNumber <= 0)
   {
-  	printf(RED"Error: "RESET
-					"No messages to view yet. Go ahead and add one!\n");
-  	return ERROR;
+  	messageNumber = 1;
   }
 
   if(DEBUG)
