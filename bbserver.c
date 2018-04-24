@@ -75,7 +75,7 @@ void verifyInput(int argc, char **argv, PortNT *PN)
   port = strtol(argv[1], NULL, 0);
   if (60000 > port || 60099 < port) 
   {
-    fprintf(stderr,RED"Input Error: "RESET "Port must be in the range [60000, 60099])\n");
+    fprintf(stderr,RED"Input Error: "RESET "Port must be in the range [60000, 60099]\n");
     printf("Anticipated input --> ./bbserver <port #> <# of hosts>\n");
     exit(EXIT_FAILURE);
   }
