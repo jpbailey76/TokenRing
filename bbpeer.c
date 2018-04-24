@@ -381,12 +381,15 @@ int writeToBulletin()
 
   // Check if this is a new file, if so
   // assume this is the first message.
+  if(DEBUG)
+  	printf(BLUE"DEBUG: "RESET
+  				 "Number of messages before = [%d]\n", messageNumber);
   if (messageNumber < 0)
   	messageNumber = 1;
 
   if(DEBUG)
   	printf(BLUE"DEBUG: "RESET
-  				 "Number of messages = [%d]\n", messageNumber);
+  				 "Number of messages after = [%d]\n", messageNumber);
 
   const char headerSpecifier[] = "%s%d: %s";
 	const char messageHeader[] = "Message #"; 
