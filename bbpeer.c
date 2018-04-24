@@ -227,7 +227,8 @@ void handshake()
     	exit(EXIT_FAILURE);
     }
 
-    // Determine who has the token first
+    // Determine who has the token first based off of their
+    // IP Address + Port combination
     comparison = compare(&ring.client, &peer);
     if (comparison == 0) 
     {
@@ -243,20 +244,25 @@ void handshake()
 
 int compare(struct sockaddr_in *firstPeer, struct sockaddr_in *secondPeer)
 {
+	// First peer less than second
   if (firstPeer->sin_addr.s_addr < secondPeer->sin_addr.s_addr) 
   {
     return -1;
   } 
+  // Peers have the same address
   else if (firstPeer->sin_addr.s_addr == secondPeer->sin_addr.s_addr) 
   {
+  	// First peer has the lower port.
     if (firstPeer->sin_port < secondPeer->sin_port)
     {
       return -1;
     }
+    // Ports are the same, thus they are the same address AND port
     else if (firstPeer->sin_port == secondPeer->sin_port)
     {
       return 0;
     }
+    // Right peer has the lower port.
     else
     {
       return 1;
