@@ -382,12 +382,14 @@ int writeToBulletin()
   // Check if this is a new file, if so
   // assume this is the first message.
   if(DEBUG)
+  {
   	printf(BLUE"DEBUG: "RESET
   				 "Number of messages before = [%d]\n", messageNumber);
+  }
   if (messageNumber < 0)
   {
   	printf(RED"Error: "RESET
-					"No messages to view yet. Go ahead and add one!\n", numMessages);
+					"No messages to view yet. Go ahead and add one!\n", messageNumber);
   	return ERROR;
   }
 
@@ -509,8 +511,10 @@ int readFromBulletin()
   	return ERROR;
   }
   if(DEBUG)
+  {
   	printf(BLUE"DEBUG: "RESET
   				 "Number of messages after = [%d]\n", numMessages);
+  }
 
 
 	// Display options
