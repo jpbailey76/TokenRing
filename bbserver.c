@@ -42,9 +42,6 @@ int main(int argc, char **argv)
 
 	runServer(sockfd, peerArray, &server);
 
-	printf(BLUE"\nDEBUG: "RESET
-  			"Client address = [%s] Peer address = [%s]\n", inet_ntoa(peerArray->client.sin_addr), inet_ntoa(peerArray->peer.sin_addr));
-
 	printf("Server Closed.\n");
 	return 0;
 }
@@ -155,7 +152,7 @@ void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
 	int i = 0, j = 0;
 	for(i = 0; i < _server->numClients; i++)
 	{
-		printf("Waiting for a connection...\n");
+		printf(YELLOW"Waiting for a connection. . .\n"RESET);
 		addr_len = sizeof(_peerArray[i].client);
 		numBytes = recvfrom(_sockfd, buffer, sizeof(buffer), 0,
 			       (struct sockaddr*)&_peerArray[i].client, &addr_len);
@@ -173,7 +170,7 @@ void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
 		printf(YELLOW"\nA host from %s:%d has connected with:"RESET"\t%s\t\n", ipAddress, _peerArray[i].client.sin_port, buffer);
 	}
 
-	printf("Sending Token Ring Position to Clients \n");
+	// Notify clients of thier position in the ring.
 	size_t len;
   for (i = 0; i < _server->numClients; i++)
   {
