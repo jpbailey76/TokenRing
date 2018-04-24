@@ -94,7 +94,13 @@ int main(int argc, char **argv)
   pthread_mutex_init(&token_Mutex, NULL);
   pthread_cond_init(&menu_Access, NULL);
   pthread_cond_init(&tokenRing_Access, NULL);
-  pthread_create(&token_Thread, NULL, tokenPassing_Thread, NULL);
+  int threadStatus = -1;
+  threadStatus = pthread_create(&token_Thread, NULL, tokenPassing_Thread, NULL);
+  if(threadStatus != 0)
+  {
+  	printf(RED"ERROR: "RESET
+  					"main() - Token thread failed to create!\n");
+  }
 
   // Display bulletin options
   displayMenu();  
