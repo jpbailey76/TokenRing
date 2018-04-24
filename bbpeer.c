@@ -394,7 +394,7 @@ int writeToBulletin()
 
 	// We need the token before we can access the board.
 	pthread_mutex_lock(&token_Mutex);
-  tokenIsNeeded = true;
+  tokenNeeded = true;
   while (!tokenReady)
   {
     printf(YELLOW"Waiting. The token is in use.\n");
@@ -412,7 +412,7 @@ int writeToBulletin()
 				"Unable to open file.\n");
 
 		// Done using the token.
-		tokenIsNeeded = false;
+		tokenNeeded = false;
 		pthread_cond_signal(&tokenRing_Access);
 		pthread_mutex_unlock(&token_Mutex);
 		return ERROR;
@@ -431,7 +431,7 @@ int writeToBulletin()
 		printf(YELLOW"Message Added.\n"RESET);
 
 		// Done using the token.
-		tokenIsNeeded = false;
+		tokenNeeded = false;
 		pthread_cond_signal(&tokenRing_Access);
 		pthread_mutex_unlock(&token_Mutex);
 		return SUCCESS;
@@ -447,7 +447,7 @@ int getNumMessages()
 
 	// We need the token before we can access the board.
 	pthread_mutex_lock(&token_Mutex);
-  tokenIsNeeded = true;
+  tokenNeeded = true;
   while (!tokenReady)
   {
     printf(YELLOW"Waiting. The token is in use.\n");
@@ -464,7 +464,7 @@ int getNumMessages()
 		printf(YELLOW"Board "RESET "%s" YELLOW" has been created. You may now enter your message.\n"RESET, BULLETIN_BOARD);
 		
 		// Done using the token.
-		tokenIsNeeded = false;
+		tokenNeeded = false;
 		pthread_cond_signal(&tokenRing_Access);
 		pthread_mutex_unlock(&token_Mutex);
 		return ERROR;
@@ -478,7 +478,7 @@ int getNumMessages()
 	fclose(fp);
 
 	// Done using the token.
-	tokenIsNeeded = false;
+	tokenNeeded = false;
   pthread_cond_signal(&tokenRing_Access);
   pthread_mutex_unlock(&token_Mutex);
 	return messageNumber;
@@ -514,7 +514,7 @@ int readFromBulletin()
 
 	// We need the token before we can access the board.
 	pthread_mutex_lock(&token_Mutex);
-  tokenIsNeeded = true;
+  tokenNeeded = true;
   while (!tokenReady)
   {
     printf(YELLOW"Waiting. The token is in use.\n");
@@ -550,14 +550,14 @@ int readFromBulletin()
 				"readFromBulletin() - Unable to open file.\n");
 
 		// Done using the token.
-    tokenIsNeeded = false;
+    tokenNeeded = false;
     pthread_cond_signal(&tokenRing_Access);
     pthread_mutex_unlock(&token_Mutex);
 		return ERROR;
 	}
 
 	// Done using the token.
-	tokenIsNeeded = false;
+	tokenNeeded = false;
   pthread_cond_signal(&tokenRing_Access);
   pthread_mutex_unlock(&token_Mutex);
 	return SUCCESS;
