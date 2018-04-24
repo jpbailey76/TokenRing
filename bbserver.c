@@ -168,7 +168,7 @@ void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
     if (NULL == inet_ntop(AF_INET, &_peerArray[i].client.sin_addr, ipAddress, sizeof ipAddress))
         perror(RED"Server Error: "RESET 
 	     		"runServer() - Address printing failed. \n");
-		printf(YELLOW"\nA host from"RESET "%s:%d" YELLOW"has connected with:"RESET"\t%s\t\n", ipAddress, _peerArray[i].client.sin_port, buffer);
+		printf(YELLOW"\nA host from"RESET" %s:%d "YELLOW"has connected with:"RESET"\t%s\t\n", ipAddress, _peerArray[i].client.sin_port, buffer);
 	}
 
 	// Notify clients of thier position in the ring.
