@@ -394,7 +394,7 @@ void displayMenu()
 			else if(strcmp(inputTok, "4") == 0)	
 			{
 				exitRing();
-				return;
+				// return;
 			}
 		}
   }   
