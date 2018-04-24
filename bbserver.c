@@ -33,7 +33,9 @@ int main(int argc, char **argv)
 		"numPeers = [%d]\tport = [%d]\n", server.numClients, server.port);
 
 	if ((sockfd = createServer(&server)) == ERROR)
+	{
 		exit(EXIT_FAILURE);
+	}
 
 	// Create peer array and run server.
   PeerT *peerArray = new_parray(&server);
@@ -101,27 +103,12 @@ int createServer(PortNT *server)
 		return ERROR;
 	}
 
-	// Make the socket
-	/*sockfd = socket(serverInfo->ai_family, serverInfo->ai_socktype, serverInfo->ai_protocol);
-	if (sockfd == -1)
-	{
-		perror(RED"Server Error: "RESET "Socket creation failed.\n");
-		return ERROR;
-	}*/
-
 	// Bind
 	if ((sockfd = bindSocket(serverInfo)) < 0)
 	{
 		perror("Error: Failed to bind to socket :");
 		exit(EXIT_FAILURE);
 	}
-
-	//if (bind(sockfd, serverInfo->ai_addr, serverInfo->ai_addrlen) == -1)
-	//{
-	//	close(sockfd);
-	//	perror(RED"Server Error: "RESET "Failed to bind socket.\n");
-	//	return ERROR;
-	//}
 
 	// Display server information
 	char hostName[BUFFER_SIZE];
@@ -150,7 +137,8 @@ void *get_in_addr(struct sockaddr *_sa)
 
 in_port_t getPort(struct sockaddr *_sa)
 {
-	if (_sa->sa_family == AF_INET) {
+	if (_sa->sa_family == AF_INET) 
+	{
 		return (((struct sockaddr_in*)_sa)->sin_port);
 	}
 
@@ -193,10 +181,6 @@ void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
       memcpy(&_peerArray[i].peer, &_peerArray[j].client, sizeof (struct sockaddr_in));
       len = sendto(_sockfd, &_peerArray[i], sizeof (PeerT), 0,
               (struct sockaddr *) &_peerArray[i].client, sizeof (struct sockaddr_in));
-      if (7 != len)
-          printf(RED"Error: "RESET
-          	 "runServer() - Message length invalid\n"
-          	 "Expected: [7]\tActual: [%zu]\n", len);
   }
 
 	close(_sockfd);

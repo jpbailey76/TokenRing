@@ -173,7 +173,7 @@ void requestPeer(const struct sockaddr *_server)
       
   // Recieved a request 
   recvfrom(sockfd, &ring, sizeof ring, 0, NULL, 0);
-  printf("Peer connected!\n");
+  printf("You have connected!\n");
 
   // Wait for all peers
   sleep(1);
