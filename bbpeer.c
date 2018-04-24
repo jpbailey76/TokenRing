@@ -339,7 +339,6 @@ void * tokenPassing_Thread(void *arg)
   // Leave the ring.
   printf(YELLOW"You've been disconnected from the ring.\n"RESET);
   sendto(sockfd, &ring, sizeof ring, 0,(struct sockaddr *) &ring.peer, sizeof ring.peer);
-  pthread_exit(EXIT_SUCCESS);
   return SUCCESS;
 }
 
@@ -358,7 +357,7 @@ void peerExit(ClientData *_request)
   	// Pass around the leave request.
     sendto(sockfd, _request, sizeof *_request, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
   }
-	printf(YELLOW"A peer has disconnected!\n"RESET);
+	printf(YELLOW"\nA peer has disconnected!\n"RESET);
 }
 
 void displayMenu()
