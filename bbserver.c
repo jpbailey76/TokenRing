@@ -11,37 +11,51 @@
 // Project
 #include "bbserver.h"
 
-// Defines
+// Flags
 #define ERROR -1
 #define SUCCESS 0
 
+//	Buffer
 #define BUFFER_SIZE 256
 
+// Styling
 #define RED "\x1b[31m"
 #define BLUE   "\x1B[34m"
 #define YELLOW   "\x1B[33m"
 #define RESET "\x1B[0m"
-#define USAGE "Anticipated input --> ./bbserver <port #> <# of hosts>\n"
+
+// Debug flag
+const bool DEBUG = true;
 
 int main(int argc, char **argv) 
 {
+	// Server info
 	int sockfd;
 	PortNT server;
+
+	// Check program args
 	verifyInput(argc, argv, &server);
-
-	printf(BLUE"DEBUG: "RESET
+	if(DEBUG)
+	{
+		printf(BLUE"DEBUG: "RESET
 		"numPeers = [%d]\tport = [%d]\n", server.numClients, server.port);
+	}
 
+	// Create server
 	if ((sockfd = createServer(&server)) == ERROR)
 	{
+		printf(RED"ERROR: "RESET
+						"Failed to create server!\n");
 		exit(EXIT_FAILURE);
 	}
 
 	// Create peer array and run server.
   PeerT *peerArray = new_parray(&server);
 
+  // Run server
 	runServer(sockfd, peerArray, &server);
 
+	// Exit
 	printf(YELLOW"\nAll peers connected and the ring has been established.\n"
 				 "The server is now exiting gracefully.\n"RESET);
 	return 0;
@@ -51,16 +65,17 @@ void verifyInput(int argc, char **argv, PortNT *PN)
 {
   if (3 > argc) 
   {
-      printf(USAGE);
+      printf("Anticipated input --> ./bbserver <port #> <# of hosts>\n");
       exit(EXIT_FAILURE);
   }
 
+  // Check for valid port range.
 	int port, temp;
   port = strtol(argv[1], NULL, 0);
-  if (1024 > port || 65535 < port) 
+  if (60000 > port || 60099 < port) 
   {
-    fprintf(stderr,RED"Input Error: "RESET "Port must be in the range [1024, 65535])\n");
-    printf(USAGE);
+    fprintf(stderr,RED"Input Error: "RESET "Port must be in the range [60000, 60099])\n");
+    printf("Anticipated input --> ./bbserver <port #> <# of hosts>\n");
     exit(EXIT_FAILURE);
   }
 
@@ -120,17 +135,6 @@ int createServer(PortNT *server)
 	freeaddrinfo(serverInfo);
 
 	return sockfd;
-}
-
-
-void *get_in_addr(struct sockaddr *_sa)
-{
-	if (_sa->sa_family == AF_INET) 
-	{
-		return &(((struct sockaddr_in*)_sa)->sin_addr);
-	}
-
-	return &(((struct sockaddr_in6*)_sa)->sin6_addr);
 }
 
 in_port_t getPort(struct sockaddr *_sa)

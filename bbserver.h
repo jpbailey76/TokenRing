@@ -23,8 +23,6 @@ void verifyInput(int argc, char **argv, PortNT *server);
 
 int createServer(PortNT *server);
 
-void *get_in_addr(struct sockaddr *sa);
-
 in_port_t getPort(struct sockaddr *sa);
 
 void runServer(int sockfd, PeerT *peerArray, PortNT *server);
