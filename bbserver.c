@@ -175,8 +175,7 @@ void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
   {
       j = (i + 1) % _server->numClients;
       memcpy(&_peerArray[i].peer, &_peerArray[j].client, sizeof (struct sockaddr_in));
-      len = sendto(_sockfd, &_peerArray[i], sizeof (PeerT), 0,
-              (struct sockaddr *) &_peerArray[i].client, sizeof (struct sockaddr_in));
+      sendto(_sockfd, &_peerArray[i], sizeof (PeerT), 0, (struct sockaddr *) &_peerArray[i].client, sizeof (struct sockaddr_in));
   }
 
 	close(_sockfd);
