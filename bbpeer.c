@@ -676,11 +676,15 @@ int printAllFromBulletin()
   printf(YELLOW"Token obtained!\n");
 
 	// Get message requested
-	FILE *fp = fopen(BULLETIN_BOARD, "r");
+	FILE *fp = fopen(BULLETIN_BOARD, "rt");
 	int count = 1;
+	char ch;
 	if(fp != NULL )
 	{
-	    fputs(fp, stdout);
+	    while((ch=fgetc(fp)) != EOF)
+	    {
+        printf("%c", ch);
+    	}
 	    fflush(stdout);
 	    fclose(fp);
 	}
