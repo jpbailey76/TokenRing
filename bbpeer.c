@@ -521,7 +521,7 @@ int getNumMessages()
 int readFromBulletin()
 {
   char input[256];
-	int numMessages = getNumMessages();
+	int numMessages = getNumMessages() - 1;
 	if(DEBUG)
 	{
   	printf(BLUE"DEBUG: "RESET
