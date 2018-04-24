@@ -42,4 +42,6 @@ int readFromBulletin();
 
 void exitRing();
 
+void cleanup();
+
 #endif // BBPEER_H_

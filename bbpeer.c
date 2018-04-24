@@ -105,14 +105,7 @@ int main(int argc, char **argv)
   			 "BBPeer disconnected.\n");
   }
 
-
-  /* release resources */
-  sleep(1);
-  pthread_join(token_Thread, NULL);
-  pthread_cond_destroy(&menu_Access);
-  pthread_cond_destroy(&tokenRing_Access);
-  pthread_mutex_destroy(&token_Mutex);
-  close(sockfd);
+  atexit(cleanup);
 	return 0;
 }
 
@@ -648,4 +641,14 @@ void exitRing()
 	tokenNeeded = false;
   pthread_cond_signal(&tokenRing_Access);
   pthread_mutex_unlock(&token_Mutex);
+}
+
+void cleanup()
+{
+	// Release resources and handle threads.
+  pthread_join(token_Thread, NULL);
+  pthread_cond_destroy(&menu_Access);
+  pthread_cond_destroy(&tokenRing_Access);
+  pthread_mutex_destroy(&token_Mutex);
+  close(sockfd);
 }
