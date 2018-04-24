@@ -26,7 +26,7 @@ void handshake();
  * @param  right [description]
  * @return       [description]
  */
-int compare(struct sockaddr_in *left, struct sockaddr_in *right);
+int compare(struct sockaddr_in *firstPeer, struct sockaddr_in *secondPeer);
 
 void * tokenPassing_Thread(void *arg);
 

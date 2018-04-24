@@ -159,7 +159,7 @@ void requestPeer(const struct sockaddr *_server)
   const char message[] = "connect";
   int len;
 
-  printf("Waiting for the token ring to form...\n");
+  printf(YELLOW"Waiting for everyone to join. . .\n"RESET);
 
   // Request for a peer
   len = sendto(sockfd, message, strlen(message), 0,
@@ -173,7 +173,7 @@ void requestPeer(const struct sockaddr *_server)
       
   // Recieved a request 
   recvfrom(sockfd, &ring, sizeof ring, 0, NULL, 0);
-  printf("Received peer from the server. Negotiating first token holder...\n");
+  printf("Peer connected!\n");
 
   // Wait for all peers
   sleep(1);
@@ -227,34 +227,40 @@ void handshake()
     	exit(EXIT_FAILURE);
     }
 
+    // Determine who has the token first
     comparison = compare(&ring.client, &peer);
     if (comparison == 0) 
     {
-      printf("Initial possession of the token\n");
+      printf("You are the first token handler. . .\n");
       break;
     } 
     else if (comparison > 0) 
     {
-      printf("Forwarding a lower peer address...\n");
       sendto(sockfd, &peer, sizeof peer, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
     } 
   }
 }
 
-int compare(struct sockaddr_in *left, struct sockaddr_in *right)
+int compare(struct sockaddr_in *firstPeer, struct sockaddr_in *secondPeer)
 {
-  if (left->sin_addr.s_addr < right->sin_addr.s_addr) 
+  if (firstPeer->sin_addr.s_addr < secondPeer->sin_addr.s_addr) 
   {
     return -1;
   } 
-  else if (left->sin_addr.s_addr == right->sin_addr.s_addr) 
+  else if (firstPeer->sin_addr.s_addr == secondPeer->sin_addr.s_addr) 
   {
-    if (left->sin_port < right->sin_port)
+    if (firstPeer->sin_port < secondPeer->sin_port)
+    {
       return -1;
-    else if (left->sin_port == right->sin_port)
+    }
+    else if (firstPeer->sin_port == secondPeer->sin_port)
+    {
       return 0;
+    }
     else
+    {
       return 1;
+    }
   }
 
   return 1;
@@ -341,9 +347,10 @@ void displayMenu()
         YELLOW"\n\tMenu"RESET"\n"
         YELLOW"===================="RESET
         "\n"
-        YELLOW"1."RESET " Write\n"
-        YELLOW"2."RESET " Read#\n"
-        YELLOW"3."RESET " Exit\n"
+        YELLOW"1."RESET " Write to the board. \n"
+        YELLOW"2."RESET " Read a message from the board.\n"
+        YELLOW"3."RESET " Show all messages.\n"
+        YELLOW"4."RESET " Exit\n"
         "\n"
         YELLOW"Selection: "RESET;
   char input[256];
@@ -358,10 +365,17 @@ void displayMenu()
 			char *inputTok = strtok(input, "\n");
 
 			if(strcmp(inputTok, "1") == 0)
+			{
 		  	writeToBulletin();
+			}
 			else if(strcmp(inputTok, "2") == 0)
 			{
 		    readFromBulletin();
+			}
+			else if(strcmp(inputTok, "3") == 0)	
+			{
+				printf("Not added yet.\n");
+				//printAllFromBulletin();
 			}
 			else if(strcmp(inputTok, "3") == 0)	
 			{
@@ -394,8 +408,10 @@ int writeToBulletin()
   }
 
   if(DEBUG)
+  {
   	printf(BLUE"DEBUG: "RESET
   				 "Number of messages after = [%d]\n", messageNumber);
+  }
 
   const char headerSpecifier[] = "%s%d: %s";
 	const char messageHeader[] = "Message #"; 
@@ -483,12 +499,15 @@ int getNumMessages()
 
   // Count Numlines
   for (ch = getc(fp); ch != EOF; ch = getc(fp))
-      if (ch == '\n') 
-          messageNumber = messageNumber + 1;
-
-	fclose(fp);
+  {
+		if (ch == '\n') 
+		{
+		  messageNumber = messageNumber + 1;
+		}
+  }
 
 	// Done using the token.
+	fclose(fp);
 	tokenNeeded = false;
   pthread_cond_signal(&tokenRing_Access);
   pthread_mutex_unlock(&token_Mutex);
