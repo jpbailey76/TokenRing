@@ -449,7 +449,10 @@ int writeToBulletin()
   	// Wait for menu access.
     pthread_cond_wait(&menu_Access, &token_Mutex);
   }
-  printf(YELLOW"Token obtained!\n\n");
+  if(DEBUG)
+  {
+	  printf(YELLOW"Token received!\n\n");
+  }
 
   // We've gained access so open the board.
 	FILE *fp;
@@ -504,7 +507,10 @@ int getNumMessages()
   	// Wait for menu access.
     pthread_cond_wait(&menu_Access, &token_Mutex);
   }
-  printf(YELLOW"Token obtained!\n");
+  if(DEBUG)
+  {
+	  printf(YELLOW"Token received!\n\n");
+  }
 
 	// Open file and count messages
 	FILE *fp;
@@ -590,7 +596,10 @@ int readFromBulletin()
   	// Wait for menu access.
     pthread_cond_wait(&menu_Access, &token_Mutex);
   }
-  printf(YELLOW"Token obtained!\n\n");
+  if(DEBUG)
+  {
+	  printf(YELLOW"Token received!\n\n");
+  }
 
 	// Get message requested
 	FILE *fp = fopen(BULLETIN_BOARD, "r");
@@ -645,7 +654,10 @@ void exitRing()
   	// Wait for menu access.
     pthread_cond_wait(&menu_Access, &token_Mutex);
   }
-  printf(YELLOW"Token obtained!\n\n");
+  if(DEBUG)
+  {
+	  printf(YELLOW"Token received!\n\n");
+  }
 
   // Disconnect
   connectedToRing = false;
@@ -678,7 +690,10 @@ int printAllFromBulletin()
   	// Wait for menu access.
     pthread_cond_wait(&menu_Access, &token_Mutex);
   }
-  printf(YELLOW"Token obtained!\n\n");
+  if(DEBUG)
+  {
+	  printf(YELLOW"Token received!\n\n");
+  }
 
 	// Get message requested
 	FILE *fp = fopen(BULLETIN_BOARD, "rt");
