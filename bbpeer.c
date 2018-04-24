@@ -1,6 +1,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -13,17 +14,16 @@
 // Project
 #include "bbpeer.h"
 
-// Defines
+// Error Handling
 #define ERROR -1
 #define SUCCESS 0
-
 #define BUFFER_SIZE 256
 
+// Output Styling
 #define RED "\x1b[31m"
 #define BLUE   "\x1B[34m"
 #define YELLOW   "\x1B[33m"
 #define RESET "\x1B[0m"
-
 
 // Server ring struct
 static ClientData ring;
@@ -32,6 +32,22 @@ static int sockfd;
 // Token & token thread
 static const uint32_t TOKEN = 0;
 static pthread_t token_Thread;   
+
+/*
+ * token_Mutex: 			used to block critical acces to the TOKEN variable.
+ * menu_Access:				used to notify threads that the menu has gained access 
+ * 										to critical data. (TOKEN)
+ * tokenRing_Access:	used to notify threads that the token ring has gained access 
+ * 										to critical data. (TOKEN)
+ * 										
+ * tokenReady:		boolean status var to notify if the token is ready to be used(no one is using it).
+ * tokenNeeded:		boolean status var to store the state of if we need the token or not. 					
+ */
+static pthread_mutex_t token_Mutex;
+static pthread_cond_t menu_Access;
+static pthread_cond_t tokenRing_Access;
+static bool tokenReady;
+static bool tokenNeeded;
 
 // Bulletin Board File
 static const char *BULLETIN_BOARD;
@@ -72,6 +88,11 @@ int main(int argc, char **argv)
   handshake();
 
   // Start token passing thread.
+  tokenReady = true;
+  tokenNeeded = false;
+  pthread_mutex_init(&token_Mutex, NULL);
+  pthread_cond_init(&menu_Access, NULL);
+  pthread_cond_init(&tokenRing_Access, NULL);
   pthread_create(&token_Thread, NULL, tokenPassing_Thread, NULL);
 
   // Display bulletin options
@@ -245,10 +266,24 @@ void * tokenPassing_Thread(void *arg)
   ClientData peer;
   ssize_t len;
 
-  // Pass the token around 
-  sendto(sockfd, &TOKEN, sizeof TOKEN, 0,
-         (struct sockaddr *) &ring.peer, sizeof ring.peer);
+  // We're gaining the token, so signal to the menu(main)
+  // thread that we've acquired it.
+  pthread_mutex_lock(&token_Mutex); 
+	tokenReady = true;
+	pthread_cond_signal(&menu_Access);
 
+	// We wait for a signal to access the token. 
+	while (tokenNeeded)
+	{
+		pthread_cond_wait(&tokenRing_Access, &token_Mutex);
+	}
+
+	// Token is acquired
+	tokenReady = false;
+	pthread_mutex_unlock(&token_Mutex);
+  
+  // Pass the token around
+  sendto(sockfd, &TOKEN, sizeof TOKEN, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
   while (1) 
   {
     // Wait for token
@@ -257,15 +292,30 @@ void * tokenPassing_Thread(void *arg)
     // Check if client is requesting a leave by sending its address
     // or if it's passing the token.
     if (sizeof (ClientData) == len) 
+    {
       peerExit(sockfd, &peer);
+    }
     else if (sizeof TOKEN == len) 
+    {
+    	// It's our turn to take the token so go ahead
+    	// and take it...
+			pthread_mutex_lock(&token_Mutex); 
+			tokenReady = true;
+			pthread_cond_signal(&menu_Access);
+			while (tokenNeeded)
+			{
+				pthread_cond_wait(&tokenRing_Access, &token_Mutex);
+			}
+			tokenReady = false;
+			pthread_mutex_unlock(&token_Mutex);
+
+			// We're done using the token so we pass it on.
       sendto(sockfd, &TOKEN, sizeof TOKEN, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
+    }
   }
 
-  // Leave request
-  sendto(sockfd, &ring, sizeof ring, 0,
-         (struct sockaddr *) &ring.peer, sizeof ring.peer);
-
+  // Leave the ring.
+  sendto(sockfd, &ring, sizeof ring, 0,(struct sockaddr *) &ring.peer, sizeof ring.peer);
   pthread_exit(EXIT_SUCCESS);
 }
 
@@ -342,12 +392,29 @@ int writeToBulletin()
   const char headerSpecifier[] = "%s%d: %s";
 	const char messageHeader[] = "Message #"; 
 
+	// We need the token before we can access the board.
+	pthread_mutex_lock(&token_Mutex);
+  tokenIsNeeded = true;
+  while (!tokenReady)
+  {
+    printf(YELLOW"Waiting. The token is in use.\n");
+
+  	// Wait for menu access.
+    pthread_cond_wait(&menu_Access, &token_Mutex);
+  }
+
+  // We've gained access so open the board.
 	FILE *fp;
 	fp = fopen(BULLETIN_BOARD, "a");
 	if(fp == NULL)
 	{
 		printf(RED"Error: "RESET
 				"Unable to open file.\n");
+
+		// Done using the token.
+		tokenIsNeeded = false;
+		pthread_cond_signal(&tokenRing_Access);
+		pthread_mutex_unlock(&token_Mutex);
 		return ERROR;
 	}
 
@@ -362,6 +429,11 @@ int writeToBulletin()
 	  fclose(fp);
 
 		printf(YELLOW"Message Added.\n"RESET);
+
+		// Done using the token.
+		tokenIsNeeded = false;
+		pthread_cond_signal(&tokenRing_Access);
+		pthread_mutex_unlock(&token_Mutex);
 		return SUCCESS;
 	}
 
@@ -373,12 +445,28 @@ int getNumMessages()
 	int messageNumber = 1;
 	char ch;
 
+	// We need the token before we can access the board.
+	pthread_mutex_lock(&token_Mutex);
+  tokenIsNeeded = true;
+  while (!tokenReady)
+  {
+    printf(YELLOW"Waiting. The token is in use.\n");
+
+  	// Wait for menu access.
+    pthread_cond_wait(&menu_Access, &token_Mutex);
+  }
+
 	// Open file and count messages
 	FILE *fp;
 	fp = fopen(BULLETIN_BOARD, "r");
 	if(fp == NULL)
 	{
 		printf(YELLOW"Board "RESET "%s" YELLOW" has been created. You may now enter your message.\n"RESET, BULLETIN_BOARD);
+		
+		// Done using the token.
+		tokenIsNeeded = false;
+		pthread_cond_signal(&tokenRing_Access);
+		pthread_mutex_unlock(&token_Mutex);
 		return ERROR;
 	}
 
@@ -388,6 +476,11 @@ int getNumMessages()
           messageNumber = messageNumber + 1;
 
 	fclose(fp);
+
+	// Done using the token.
+	tokenIsNeeded = false;
+  pthread_cond_signal(&tokenRing_Access);
+  pthread_mutex_unlock(&token_Mutex);
 	return messageNumber;
 }
 
@@ -419,6 +512,17 @@ int readFromBulletin()
 		return ERROR;
 	}
 
+	// We need the token before we can access the board.
+	pthread_mutex_lock(&token_Mutex);
+  tokenIsNeeded = true;
+  while (!tokenReady)
+  {
+    printf(YELLOW"Waiting. The token is in use.\n");
+
+  	// Wait for menu access.
+    pthread_cond_wait(&menu_Access, &token_Mutex);
+  }
+
 	// Get message requested
 	FILE *fp = fopen(BULLETIN_BOARD, "r");
 	int count = 1;
@@ -444,8 +548,17 @@ int readFromBulletin()
 	{
     printf(RED"Error: "RESET
 				"readFromBulletin() - Unable to open file.\n");
+
+		// Done using the token.
+    tokenIsNeeded = false;
+    pthread_cond_signal(&tokenRing_Access);
+    pthread_mutex_unlock(&token_Mutex);
 		return ERROR;
 	}
 
+	// Done using the token.
+	tokenIsNeeded = false;
+  pthread_cond_signal(&tokenRing_Access);
+  pthread_mutex_unlock(&token_Mutex);
 	return SUCCESS;
 }
