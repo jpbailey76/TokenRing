@@ -401,6 +401,7 @@ int writeToBulletin()
   	// Wait for menu access.
     pthread_cond_wait(&menu_Access, &token_Mutex);
   }
+  printf(YELLOW"Token obtained!\n");
 
   // We've gained access so open the board.
 	FILE *fp;
@@ -454,6 +455,7 @@ int getNumMessages()
   	// Wait for menu access.
     pthread_cond_wait(&menu_Access, &token_Mutex);
   }
+  printf(YELLOW"Token obtained!\n");
 
 	// Open file and count messages
 	FILE *fp;
@@ -521,6 +523,7 @@ int readFromBulletin()
   	// Wait for menu access.
     pthread_cond_wait(&menu_Access, &token_Mutex);
   }
+  printf(YELLOW"Token obtained!\n");
 
 	// Get message requested
 	FILE *fp = fopen(BULLETIN_BOARD, "r");
