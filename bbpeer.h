@@ -40,6 +40,8 @@ int getNumMessages();
 
 int readFromBulletin();
 
+int printAllFromBulletin();
+
 void exitRing();
 
 void cleanup();

@@ -395,8 +395,7 @@ void displayMenu()
 			}
 			else if(strcmp(inputTok, "3") == 0)	
 			{
-				printf("Not added yet.\n");
-				//printAllFromBulletin();
+				printAllFromBulletin();
 			}
 			else if(strcmp(inputTok, "4") == 0)	
 			{
@@ -660,4 +659,46 @@ void cleanup()
   pthread_cond_destroy(&tokenRing_Access);
   pthread_mutex_destroy(&token_Mutex);
   close(sockfd);
+}
+
+int printAllFromBulletin()
+{
+	// We need the token before we can access the board.
+	pthread_mutex_lock(&token_Mutex);
+  tokenNeeded = true;
+  while (!tokenReady)
+  {
+    printf(YELLOW"Waiting. The token is in use.\n");
+
+  	// Wait for menu access.
+    pthread_cond_wait(&menu_Access, &token_Mutex);
+  }
+  printf(YELLOW"Token obtained!\n");
+
+	// Get message requested
+	FILE *fp = fopen(BULLETIN_BOARD, "r");
+	int count = 1;
+	if(fp != NULL )
+	{
+	    fputs(fp, stdout);
+	    fflush();
+	    fclose(fp);
+	}
+	else
+	{
+		printf(RED"Error: "RESET
+				"printAllFromBulletin() - Unable to open file.\n");
+
+		// Done using the token.
+    tokenNeeded = false;
+    pthread_cond_signal(&tokenRing_Access);
+    pthread_mutex_unlock(&token_Mutex);
+		return ERROR;
+	}
+
+	// Done using the token.
+	tokenNeeded = false;
+  pthread_cond_signal(&tokenRing_Access);
+  pthread_mutex_unlock(&token_Mutex);
+	return SUCCESS;
 }
