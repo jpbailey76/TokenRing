@@ -100,6 +100,7 @@ int main(int argc, char **argv)
   {
   	printf(RED"ERROR: "RESET
   					"main() - Token thread failed to create!\n");
+  	retur ERROR;
   }
 
   // Display bulletin options
