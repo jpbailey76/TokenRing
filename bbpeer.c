@@ -107,6 +107,7 @@ int main(int argc, char **argv)
 
 
   /* release resources */
+  sleep(1);
   pthread_join(token_Thread, NULL);
   pthread_cond_destroy(&menu_Access);
   pthread_cond_destroy(&tokenRing_Access);
@@ -344,8 +345,6 @@ void * tokenPassing_Thread(void *arg)
 
 void peerExit(ClientData *_request)
 {
-	printf(BLUE"DEBUG"RESET
-				 "Exiting the ring!\n");
   // Our neighbor is leaving, so send to the peer after them.
   if (0 == compare(&_request->client, &ring.peer)) 
   {
@@ -359,8 +358,7 @@ void peerExit(ClientData *_request)
   	// Pass around the leave request.
     sendto(sockfd, _request, sizeof *_request, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
   }
-  printf(BLUE"DEBUG"RESET
-				 "Exited!\n");
+	printf(YELLOW"A peer has disconnected!\n"RESET);
 }
 
 void displayMenu()
