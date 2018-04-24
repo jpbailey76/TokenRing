@@ -498,9 +498,11 @@ int readFromBulletin()
   char input[256];
 	int numMessages = getNumMessages();
 	if(DEBUG)
+	{
   	printf(BLUE"DEBUG: "RESET
-  				 "Number of messages before = [%d]\n", messageNumber);
-  if (messageNumber < 0)
+  				 "Number of messages before = [%d]\n", numMessages);
+	}
+  if (numMessages < 0)
   {
   	printf(RED"Error: "RESET
 					"No messages to view yet. Go ahead and add one!\n", numMessages);
@@ -508,7 +510,7 @@ int readFromBulletin()
   }
   if(DEBUG)
   	printf(BLUE"DEBUG: "RESET
-  				 "Number of messages after = [%d]\n", messageNumber);
+  				 "Number of messages after = [%d]\n", numMessages);
 
 
 	// Display options
