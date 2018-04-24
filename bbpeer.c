@@ -682,12 +682,12 @@ int printAllFromBulletin()
 	char ch;
 	if(fp != NULL )
 	{
-			printf(YELLOW"\n");
+			printf(YELLOW);
 	    while((ch=fgetc(fp)) != EOF)
 	    {
         printf("%c", ch);
     	}
-			printf(RESET"\n");
+			printf(RESET);
 	    fflush(stdout);
 	    fclose(fp);
 	}
