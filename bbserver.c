@@ -66,7 +66,7 @@ void verifyInput(int argc, char **argv, PortNT *PN)
 {
   if (3 > argc) 
   {
-      printf("Anticipated input --> ./bbserver <port #> <# of hosts>\n");
+      printf(YELLOW"Anticipated input --> "RESET"./bbserver <port #> <# of hosts>\n");
       exit(EXIT_FAILURE);
   }
 
