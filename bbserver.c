@@ -42,8 +42,8 @@ int main(int argc, char **argv)
 
 	runServer(sockfd, peerArray, &server);
 
-	printf("\nAll peers connected and the ring has been established.\n"
-				 "The server is now exiting gracefully.\n");
+	printf(YELLOW"\nAll peers connected and the ring has been established.\n"
+				 "The server is now exiting gracefully.\n"RESET);
 	return 0;
 }
 
