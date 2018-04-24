@@ -54,7 +54,7 @@ bool connectedToRing;
 const char *BULLETIN_BOARD;
 
 // Debug flag
-const bool DEBUG = true;
+const bool DEBUG = false;
 
 int main(int argc, char **argv) 
 {

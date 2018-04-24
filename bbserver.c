@@ -26,7 +26,7 @@
 #define RESET "\x1B[0m"
 
 // Debug flag
-const bool DEBUG = true;
+const bool DEBUG = false;
 
 int main(int argc, char **argv) 
 {
