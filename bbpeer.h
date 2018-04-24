@@ -30,7 +30,7 @@ int compare(struct sockaddr_in *firstPeer, struct sockaddr_in *secondPeer);
 
 void * tokenPassing_Thread(void *arg);
 
-void peerExit(int sockfd, ClientData *request);
+void peerExit(ClientData *request);
 
 void displayMenu();
 
