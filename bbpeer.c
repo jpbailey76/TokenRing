@@ -332,7 +332,7 @@ void * tokenPassing_Thread(void *arg)
   // Leave the ring.
   printf(YELLOW"You've been disconnected from the ring.\n"RESET);
   sendto(sockfd, &ring, sizeof ring, 0,(struct sockaddr *) &ring.peer, sizeof ring.peer);
-  pthread_exit(EXIT_SUCCESS);
+  NULL
 }
 
 void peerExit(ClientData *_request)
