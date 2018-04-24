@@ -40,4 +40,6 @@ int getNumMessages();
 
 int readFromBulletin();
 
+void exitRing();
+
 #endif // BBPEER_H_

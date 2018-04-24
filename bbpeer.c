@@ -26,12 +26,12 @@
 #define RESET "\x1B[0m"
 
 // Server ring struct
-static ClientData ring;
-static int sockfd;
+ClientData ring;
+int sockfd;
 
 // Token & token thread
-static const uint32_t TOKEN = 0;
-static pthread_t token_Thread;   
+const uint32_t TOKEN = 0;
+pthread_t token_Thread;   
 
 /*
  * token_Mutex: 			used to block critical acces to the TOKEN variable.
@@ -43,17 +43,18 @@ static pthread_t token_Thread;
  * tokenReady:		boolean status var to notify if the token is ready to be used(no one is using it).
  * tokenNeeded:		boolean status var to store the state of if we need the token or not. 					
  */
-static pthread_mutex_t token_Mutex;
-static pthread_cond_t menu_Access;
-static pthread_cond_t tokenRing_Access;
-static bool tokenReady;
-static bool tokenNeeded;
+pthread_mutex_t token_Mutex;
+pthread_cond_t menu_Access;
+pthread_cond_t tokenRing_Access;
+bool tokenReady;
+bool tokenNeeded;
+bool connectedToRing;
 
 // Bulletin Board File
-static const char *BULLETIN_BOARD;
+const char *BULLETIN_BOARD;
 
 // Debug flag
-static const bool DEBUG = true;
+const bool DEBUG = true;
 
 int main(int argc, char **argv) 
 {
@@ -85,6 +86,7 @@ int main(int argc, char **argv)
 
 	// Determine who gets the token first
   handshake();
+  connectedToRing = true;
 
   // Start token passing thread.
   tokenReady = true;
@@ -295,7 +297,7 @@ void * tokenPassing_Thread(void *arg)
   
   // Pass the token around
   sendto(sockfd, &TOKEN, sizeof TOKEN, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
-  while (1) 
+  while (connectedToRing) 
   {
     // Wait for token
     len = recvfrom(sockfd, &peer, sizeof peer, 0, NULL, 0);
@@ -383,10 +385,9 @@ void displayMenu()
 				printf("Not added yet.\n");
 				//printAllFromBulletin();
 			}
-			else if(strcmp(inputTok, "3") == 0)	
+			else if(strcmp(inputTok, "4") == 0)	
 			{
-				printf("Not added yet.\n");
-				//exit();
+				exitRing();
 			}
 		}
   }   
@@ -612,4 +613,27 @@ int readFromBulletin()
   pthread_cond_signal(&tokenRing_Access);
   pthread_mutex_unlock(&token_Mutex);
 	return SUCCESS;
+}
+
+void exitRing()
+{
+	// We need the token before we can access the board.
+	pthread_mutex_lock(&token_Mutex);
+  tokenNeeded = true;
+  while (!tokenReady)
+  {
+    printf(YELLOW"Waiting. The token is in use.\n");
+
+  	// Wait for menu access.
+    pthread_cond_wait(&menu_Access, &token_Mutex);
+  }
+  printf(YELLOW"Token obtained!\n");
+
+  // Disconnect
+  connectedToRing = false;
+
+  // Done using the token.
+	tokenNeeded = false;
+  pthread_cond_signal(&tokenRing_Access);
+  pthread_mutex_unlock(&token_Mutex);
 }
