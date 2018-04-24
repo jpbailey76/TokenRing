@@ -172,7 +172,7 @@ void requestPeer(const struct sockaddr *_server)
   const char message[] = "connect";
   int len;
 
-  printf(YELLOW"Waiting for everyone to join. . .\n"RESET);
+  printf(YELLOW"Waiting for everyone to join. . .\n\n"RESET);
 
   // Request for a peer
   len = sendto(sockfd, message, strlen(message), 0,
@@ -186,7 +186,7 @@ void requestPeer(const struct sockaddr *_server)
       
   // Recieved a request 
   recvfrom(sockfd, &ring, sizeof ring, 0, NULL, 0);
-  printf(YELLOW"You have connected!\n"RESET);
+  printf(YELLOW"You have connected!\n\n"RESET);
 
   // Wait for all peers
   sleep(1);
@@ -230,7 +230,7 @@ void handshake()
     // Token received
     if (sizeof (uint32_t) == len)
     {
-    	printf(YELLOW"Token recieved!\n"RESET);
+    	printf(YELLOW"Token recieved!\n\n"RESET);
       break;
     }
     else if (sizeof (peer) != len)
@@ -245,7 +245,7 @@ void handshake()
     comparison = compare(&ring.client, &peer);
     if (comparison == 0) 
     {
-      printf("You are the first token handler. . .\n");
+      printf("You are the first token handler. . .\n\n");
       break;
     } 
     else if (comparison > 0) 
@@ -359,7 +359,7 @@ void peerExit(ClientData *_request)
   	// Pass around the leave request.
     sendto(sockfd, _request, sizeof *_request, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
   }
-	printf(YELLOW"\nA peer has disconnected!\n"RESET);
+	printf(YELLOW"\nA peer has disconnected!\n\n"RESET);
 }
 
 void displayMenu()
@@ -439,12 +439,12 @@ int writeToBulletin()
   tokenNeeded = true;
   while (!tokenReady)
   {
-    printf(YELLOW"Waiting. The token is in use.\n");
+    printf(YELLOW"Waiting. The token is in use.\n\n");
 
   	// Wait for menu access.
     pthread_cond_wait(&menu_Access, &token_Mutex);
   }
-  printf(YELLOW"Token obtained!\n");
+  printf(YELLOW"Token obtained!\n\n");
 
   // We've gained access so open the board.
 	FILE *fp;
@@ -453,7 +453,7 @@ int writeToBulletin()
 	{
 		printf(RED"Error: "RESET
 				"Unable to open file. It's likely not been created yet. Go ahead and"
-				" write a message to it and try again!\n");
+				" write a message to it and try again!\n\n");
 
 		// Done using the token.
 		tokenNeeded = false;
@@ -472,7 +472,7 @@ int writeToBulletin()
 		fprintf(fp, buffer);
 	  fclose(fp);
 
-		printf(YELLOW"Message Added.\n"RESET);
+		printf(YELLOW"Message Added.\n\n"RESET);
 
 		// Done using the token.
 		tokenNeeded = false;
@@ -494,7 +494,7 @@ int getNumMessages()
   tokenNeeded = true;
   while (!tokenReady)
   {
-    printf(YELLOW"Waiting. The token is in use.\n");
+    printf(YELLOW"Waiting. The token is in use.\n\n");
 
   	// Wait for menu access.
     pthread_cond_wait(&menu_Access, &token_Mutex);
@@ -506,7 +506,7 @@ int getNumMessages()
 	fp = fopen(BULLETIN_BOARD, "r");
 	if(fp == NULL)
 	{
-		printf(YELLOW"Board "RESET "%s" YELLOW" has been created. You may now enter your message.\n"RESET, BULLETIN_BOARD);
+		printf(YELLOW"Board "RESET "%s" YELLOW" has been created. You may now enter your message.\n\n"RESET, BULLETIN_BOARD);
 		
 		// Done using the token.
 		tokenNeeded = false;
@@ -580,12 +580,12 @@ int readFromBulletin()
   tokenNeeded = true;
   while (!tokenReady)
   {
-    printf(YELLOW"Waiting. The token is in use.\n");
+    printf(YELLOW"Waiting. The token is in use.\n\n");
 
   	// Wait for menu access.
     pthread_cond_wait(&menu_Access, &token_Mutex);
   }
-  printf(YELLOW"Token obtained!\n");
+  printf(YELLOW"Token obtained!\n\n");
 
 	// Get message requested
 	FILE *fp = fopen(BULLETIN_BOARD, "r");
@@ -635,12 +635,12 @@ void exitRing()
   tokenNeeded = true;
   while (!tokenReady)
   {
-    printf(YELLOW"Waiting. The token is in use.\n");
+    printf(YELLOW"Waiting. The token is in use.\n\n");
 
   	// Wait for menu access.
     pthread_cond_wait(&menu_Access, &token_Mutex);
   }
-  printf(YELLOW"Token obtained!\n");
+  printf(YELLOW"Token obtained!\n\n");
 
   // Disconnect
   connectedToRing = false;
@@ -668,12 +668,12 @@ int printAllFromBulletin()
   tokenNeeded = true;
   while (!tokenReady)
   {
-    printf(YELLOW"Waiting. The token is in use.\n");
+    printf(YELLOW"Waiting. The token is in use.\n\n");
 
   	// Wait for menu access.
     pthread_cond_wait(&menu_Access, &token_Mutex);
   }
-  printf(YELLOW"Token obtained!\n");
+  printf(YELLOW"Token obtained!\n\n");
 
 	// Get message requested
 	FILE *fp = fopen(BULLETIN_BOARD, "rt");
