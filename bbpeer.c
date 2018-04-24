@@ -245,7 +245,7 @@ void handshake()
     comparison = compare(&ring.client, &peer);
     if (comparison == 0) 
     {
-      printf("You are the first token handler. . .\n\n");
+      printf(YELLOW"You are the first token handler. . .\n\n"RESET);
       break;
     } 
     else if (comparison > 0) 
