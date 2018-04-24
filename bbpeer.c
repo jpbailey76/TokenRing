@@ -598,7 +598,7 @@ int readFromBulletin()
 	        if(count == messageToView)
 	        {
 	            printf(YELLOW"Message selected:\n"RESET);
-	            printf("%s\n", buffer);
+	            printf("%s", buffer);
 	            break;
 	        }
 	        else
