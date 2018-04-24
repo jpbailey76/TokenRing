@@ -171,7 +171,6 @@ void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
 	}
 
 	// Notify clients of thier position in the ring.
-	size_t len;
   for (i = 0; i < _server->numClients; i++)
   {
       j = (i + 1) % _server->numClients;
