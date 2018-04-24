@@ -153,7 +153,7 @@ void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
 	int i = 0, j = 0;
 	for(i = 0; i < _server->numClients; i++)
 	{
-		printf(YELLOW"Waiting for a connection. . .\n"RESET);
+		printf(YELLOW"\nWaiting for a connection. . .\n"RESET);
 		addr_len = sizeof(_peerArray[i].client);
 		numBytes = recvfrom(_sockfd, buffer, sizeof(buffer), 0,
 			       (struct sockaddr*)&_peerArray[i].client, &addr_len);
