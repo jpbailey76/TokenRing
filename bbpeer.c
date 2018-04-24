@@ -210,7 +210,7 @@ void handshake()
   }
 
   // Wait for a token, or pass it.
-  while(1) 
+  while (1) 
   {
   	if(DEBUG)
   	{
