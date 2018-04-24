@@ -385,7 +385,11 @@ int writeToBulletin()
   	printf(BLUE"DEBUG: "RESET
   				 "Number of messages before = [%d]\n", messageNumber);
   if (messageNumber < 0)
-  	messageNumber = 1;
+  {
+  	printf(RED"Error: "RESET
+					"No messages to view yet. Go ahead and add one!\n", numMessages);
+  	return ERROR;
+  }
 
   if(DEBUG)
   	printf(BLUE"DEBUG: "RESET
@@ -412,7 +416,8 @@ int writeToBulletin()
 	if(fp == NULL)
 	{
 		printf(RED"Error: "RESET
-				"Unable to open file.\n");
+				"Unable to open file. It's likely not been created yet. Go ahead and"
+				" write a message to it and try again!\n");
 
 		// Done using the token.
 		tokenNeeded = false;
@@ -492,8 +497,19 @@ int readFromBulletin()
 {
   char input[256];
 	int numMessages = getNumMessages();
-	if (numMessages < 0)
-		numMessages = 1;
+	if(DEBUG)
+  	printf(BLUE"DEBUG: "RESET
+  				 "Number of messages before = [%d]\n", messageNumber);
+  if (messageNumber < 0)
+  {
+  	printf(RED"Error: "RESET
+					"No messages to view yet. Go ahead and add one!\n", numMessages);
+  	return ERROR;
+  }
+  if(DEBUG)
+  	printf(BLUE"DEBUG: "RESET
+  				 "Number of messages after = [%d]\n", messageNumber);
+
 
 	// Display options
 	const char header[] =
@@ -551,8 +567,9 @@ int readFromBulletin()
 	}
 	else
 	{
-    printf(RED"Error: "RESET
-				"readFromBulletin() - Unable to open file.\n");
+		printf(RED"Error: "RESET
+				"readFromBulletin() - Unable to open file. It's likely not been created yet. Go ahead and"
+				" write a message to it and try again!\n");
 
 		// Done using the token.
     tokenNeeded = false;
