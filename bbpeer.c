@@ -177,7 +177,7 @@ void requestPeer(const struct sockaddr *_server)
       
   // Recieved a request 
   recvfrom(sockfd, &ring, sizeof ring, 0, NULL, 0);
-  printf("You have connected!\n");
+  printf(YELLOW"You have connected!\n"RESET);
 
   // Wait for all peers
   sleep(1);
@@ -333,7 +333,7 @@ void * tokenPassing_Thread(void *arg)
   printf(YELLOW"You've been disconnected from the ring.\n"RESET);
   sendto(sockfd, &ring, sizeof ring, 0,(struct sockaddr *) &ring.peer, sizeof ring.peer);
   // pthread_exit(EXIT_SUCCESS);
-  return NULL;
+  // return NULL;
 }
 
 void peerExit(ClientData *_request)
