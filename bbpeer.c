@@ -365,15 +365,17 @@ void peerExit(ClientData *_request)
 void displayMenu()
 {
 	const char menu[] =
-        YELLOW"\n\tMenu"RESET"\n"
-        YELLOW"===================="RESET
+				YELLOW
+        "\n\tMenu\n"
+        "===================="
         "\n"
-        YELLOW"1."RESET " Write to the board. \n"
-        YELLOW"2."RESET " Read a message from the board.\n"
-        YELLOW"3."RESET " Show all messages.\n"
-        YELLOW"4."RESET " Exit\n"
+        "1. Write to the board. \n"
+        "2. Read a message from the board.\n"
+        "3. Show all messages.\n"
+        "4. Exit\n"
         "\n"
-        YELLOW"Selection: "RESET;
+        "Selection: "
+        RESET;
   char input[256];
 
   while (1) 
