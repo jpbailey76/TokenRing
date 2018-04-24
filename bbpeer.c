@@ -105,7 +105,9 @@ int main(int argc, char **argv)
   			 "BBPeer disconnected.\n");
   }
 
-  atexit(cleanup);
+  // Cleanup all data
+  cleanup();
+
 	return 0;
 }
 
@@ -332,7 +334,7 @@ void * tokenPassing_Thread(void *arg)
   // Leave the ring.
   printf(YELLOW"You've been disconnected from the ring.\n"RESET);
   sendto(sockfd, &ring, sizeof ring, 0,(struct sockaddr *) &ring.peer, sizeof ring.peer);
-  return NULL;
+  pthread_exit(SUCCESS);
 }
 
 void peerExit(ClientData *_request)
