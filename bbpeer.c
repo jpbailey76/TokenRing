@@ -374,6 +374,10 @@ void displayMenu()
 		{
 			char *inputTok = strtok(input, "\n");
 
+			// If they're just hitting enter, continue.
+			if(!inputTok)
+				continue;
+
 			if (strcmp(inputTok, "1") == 0)
 			{
 				writeToBulletin();
