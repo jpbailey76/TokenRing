@@ -1,3 +1,9 @@
+/*
+*	Authors: Jefferey Briggs
+*			 Jeremy Bailey
+*	Course:	 COP4635
+*/
+
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <netinet/in.h>
