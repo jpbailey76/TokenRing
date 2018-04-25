@@ -3,67 +3,75 @@
 
 #include <netinet/in.h>
 
-/* Struct that stores neighbor information */
 /**
- * 
+ *	Contains a bbpeer information.
+ *	client	 - A bbpeer's address information for connecting to.
+ *	neighbor - The address information of client's neighbor in the ring.
  */
 typedef struct bbpeer_info 
 {
     struct sockaddr_in client;
-    struct sockaddr_in peer;
-} PeerT;
+    struct sockaddr_in neighbor;
+} PeerInfo;
 
-/* Struct to store server port and number of clients*/ 
 /**
- * 
+ *	Contains information related to the server.
+ *	numClients - Number of clients to create the ring with.
+ *	port	   - The port the server is hosting on.
  */
-typedef struct port_N 
+typedef struct bbserver_info 
 {
     int numClients;
     int port;
-} PortNT;
+} ServerInfo;
 
 /**
- * [new_parray description]
- * @param  PN [description]
- * @return    [description]
+ *	Creates an array containing PeerInfo structs.
+ *
+ *	@param  serverInfo - structure of server information (number of peers, port)
+ *	@return			   - an array of bbpeers.
  */
-PeerT *new_parray(PortNT *PN);
+PeerInfo *createPeerArray(ServerInfo *serverInfo);
 
 /**
- * [verifyInput description]
- * @param argc   [description]
- * @param argv   [description]
- * @param server [description]
+*	Checks the arguments that the program was ran with.
+*	If it's valid we continue, if not we throw an error.
+*
+*	@param argc - Number of arguments passed in.
+*	@param argv - Array containing the arguments.
+*/
+void verifyInput(int argc, char **argv, ServerInfo *server);
+
+/**
+ *	Hosts the bbserver on the given port.
+ *
+ *	@param  server - Structure containing server information.
+ *	@return        - socket file descriptor
  */
-void verifyInput(int argc, char **argv, PortNT *server);
+int createServer(ServerInfo *server);
 
 /**
- * [createServer description]
- * @param  server [description]
- * @return        [description]
- */
-int createServer(PortNT *server);
-
-/**
- * [getPort description]
- * @param  sa [description]
- * @return    [description]
+ *	Given a sockaddr this function returns it's port.
+ *
+ *	@param  sa	- sockaddr to get the port from.
+ *	@return     - an address port.
  */
 in_port_t getPort(struct sockaddr *sa);
 
 /**
- * [runServer description]
- * @param sockfd    [description]
- * @param peerArray [description]
- * @param server    [description]
+ *	Runs a loop and waits for connections to the server. As peers connect to the server
+ *	it notifies them of their neighbor and establishes the token ring.
+ *
+ *	@param sockfd    - Server socket file descriptor.
+ *	@param peerArray - Array containing information of peers in the ring.
+ *	@param server    - Contains information about the server.
  */
-void runServer(int sockfd, PeerT *peerArray, PortNT *server);
+void runServer(int sockfd, PeerInfo *peerArray, ServerInfo *server);
 
 /**
- * [bindSocket description]
- * @param  res [description]
- * @return     [description]
+ *	Binds a socket given an addrinfo structure and returns a file descriptor.
+ *	@param  res - addrinfo to bind
+ *	@return     - Server socket file descriptor.
  */
 int bindSocket(struct addrinfo *res);
 

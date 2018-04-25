@@ -17,8 +17,8 @@ typedef struct TokenRing
  *	Checks the arguments that the program was ran with.
  *	If it's valid we continue, if not we throw an error.
  *
- * @param argc - Number of arguments passed in.
- * @param argv - Array containing the arguments.
+ *	@param argc - Number of arguments passed in.
+ *	@param argv - Array containing the arguments.
  */
 void verifyInput(int argc, char **argv);
 
