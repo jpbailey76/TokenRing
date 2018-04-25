@@ -54,7 +54,7 @@ bool connectedToRing;
 const char *BULLETIN_BOARD;
 
 // Debug flag
-const bool DEBUG = false;
+const bool DEBUG = true;
 
 int main(int argc, char **argv)
 {
@@ -375,6 +375,11 @@ void displayMenu()
 			char *inputTok = strtok(input, "\n");
 
 			// If they're just hitting enter, continue.
+			if (DEBUG)
+			{
+				printf(BLUE"DEBUG: "RESET
+					"inputTok = %s", inputTok);
+			}
 			if(!inputTok)
 				continue;
 
