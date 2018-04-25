@@ -28,7 +28,7 @@
 // Debug flag
 const bool DEBUG = false;
 
-int main(int argc, char **argv) 
+int main(int argc, char **argv)
 {
 	// Server info
 	int sockfd;
@@ -36,67 +36,67 @@ int main(int argc, char **argv)
 
 	// Check program args
 	verifyInput(argc, argv, &server);
-	if(DEBUG)
+	if (DEBUG)
 	{
 		printf(BLUE"DEBUG: "RESET
-		"numPeers = [%d]\tport = [%d]\n", server.numClients, server.port);
+			"numPeers = [%d]\tport = [%d]\n", server.numClients, server.port);
 	}
 
 	// Create server
 	if ((sockfd = createServer(&server)) == ERROR)
 	{
 		printf(RED"ERROR: "RESET
-						"Failed to create server!\n");
+			"Failed to create server!\n");
 		exit(EXIT_FAILURE);
 	}
 
 	// Create peer array and run server.
-  PeerInfo *peerArray = createPeerArray(&server);
+	PeerInfo *peerArray = createPeerArray(&server);
 
-  // Run server
+	// Run server
 	runServer(sockfd, peerArray, &server);
 
 	// Exit
 	printf(YELLOW"\nAll peers connected and the ring has been established.\n"
-				 "The server is now exiting gracefully.\n"RESET);
+		"The server is now exiting gracefully.\n"RESET);
 	return 0;
 }
 
 void verifyInput(int argc, char **argv, ServerInfo *PN)
 {
-  if (3 > argc) 
-  {
-      printf(YELLOW"Anticipated input --> "RESET"./bbserver <port #> <# of hosts>\n");
-      exit(EXIT_FAILURE);
-  }
+	if (3 > argc)
+	{
+		printf(YELLOW"Anticipated input --> "RESET"./bbserver <port #> <# of hosts>\n");
+		exit(EXIT_FAILURE);
+	}
 
-  // Check for valid port range.
+	// Check for valid port range.
 	int port, temp;
-  port = strtol(argv[1], NULL, 0);
-  if (60000 > port || 60099 < port) 
-  {
-    fprintf(stderr,RED"Input Error: "RESET "Port must be in the range [60000, 60099]\n");
-    printf("Anticipated input --> ./bbserver <port #> <# of hosts>\n");
-    exit(EXIT_FAILURE);
-  }
+	port = strtol(argv[1], NULL, 0);
+	if (60000 > port || 60099 < port)
+	{
+		fprintf(stderr, RED"Input Error: "RESET "Port must be in the range [60000, 60099]\n");
+		printf("Anticipated input --> ./bbserver <port #> <# of hosts>\n");
+		exit(EXIT_FAILURE);
+	}
 
-  temp = atoi(argv[2]);
-  PN->numClients = temp;
-  PN->port = port;
+	temp = atoi(argv[2]);
+	PN->numClients = temp;
+	PN->port = port;
 }
 
-PeerInfo *createPeerArray(ServerInfo *server) 
+PeerInfo *createPeerArray(ServerInfo *server)
 {
-  PeerInfo *peer;
+	PeerInfo *peer;
 
-  peer = malloc(server->numClients*sizeof(PeerInfo));
-  if(peer == NULL) 
-  {
-      fprintf(stderr, "Memory allocation failed!\n");
-      exit(EXIT_FAILURE);
-  }
+	peer = malloc(server->numClients * sizeof(PeerInfo));
+	if (peer == NULL)
+	{
+		fprintf(stderr, "Memory allocation failed!\n");
+		exit(EXIT_FAILURE);
+	}
 
-  return peer;
+	return peer;
 }
 
 int createServer(ServerInfo *server)
@@ -107,18 +107,18 @@ int createServer(ServerInfo *server)
 	sprintf(port, "%d", server->port);
 
 	memset((void *)&hints, 0, (size_t) sizeof(hints));
-	hints.ai_family = AF_INET;    
-	hints.ai_socktype = SOCK_DGRAM;  
-	hints.ai_flags = AI_PASSIVE;     
+	hints.ai_family = AF_INET;
+	hints.ai_socktype = SOCK_DGRAM;
+	hints.ai_flags = AI_PASSIVE;
 
-	//
-	if ((status = getaddrinfo(NULL, port, &hints, &serverAddrInfo)) != 0) 
+	// Get the address info
+	if ((status = getaddrinfo(NULL, port, &hints, &serverAddrInfo)) != 0)
 	{
 		fprintf(stderr, RED"Server Error: "RESET "getaddrinfo() error = [%s]\n", gai_strerror(status));
 		return ERROR;
 	}
 
-	// Bind the socket 
+	// Bind the socket
 	if ((sockfd = bindSocket(serverAddrInfo)) < 0)
 	{
 		perror("Error: Failed to bind to socket :");
@@ -141,7 +141,7 @@ int createServer(ServerInfo *server)
 
 in_port_t getPort(struct sockaddr *_sa)
 {
-	if (_sa->sa_family == AF_INET) 
+	if (_sa->sa_family == AF_INET)
 	{
 		return (((struct sockaddr_in*)_sa)->sin_port);
 	}
@@ -157,12 +157,12 @@ void runServer(int _sockfd, PeerInfo *_peerArray, ServerInfo *_server)
 	int numBytes = 0;
 
 	int i = 0, j = 0;
-	for(i = 0; i < _server->numClients; i++)
+	for (i = 0; i < _server->numClients; i++)
 	{
 		printf(YELLOW"\nWaiting for a connection. . .\n"RESET);
 		addr_len = sizeof(_peerArray[i].client);
 		numBytes = recvfrom(_sockfd, buffer, sizeof(buffer), 0,
-			       (struct sockaddr*)&_peerArray[i].client, &addr_len);
+			(struct sockaddr*)&_peerArray[i].client, &addr_len);
 		if (numBytes == -1)
 		{
 			printf("numBytes = [%d]\n", numBytes);
@@ -170,20 +170,20 @@ void runServer(int _sockfd, PeerInfo *_peerArray, ServerInfo *_server)
 			exit(1);
 		}
 
-    // The ipAddress:Port
-    if (NULL == inet_ntop(AF_INET, &_peerArray[i].client.sin_addr, ipAddress, sizeof ipAddress))
-        perror(RED"Server Error: "RESET 
-	     		"runServer() - Address printing failed. \n");
+		// The ipAddress:Port
+		if (NULL == inet_ntop(AF_INET, &_peerArray[i].client.sin_addr, ipAddress, sizeof ipAddress))
+			perror(RED"Server Error: "RESET
+				"runServer() - Address printing failed. \n");
 		printf(YELLOW"\nA host from"RESET" %s:%d "YELLOW"has connected with:"RESET"\t%s\t\n", ipAddress, _peerArray[i].client.sin_port, buffer);
 	}
 
 	// Notify clients of thier position in the ring.
-  for (i = 0; i < _server->numClients; i++)
-  {
-      j = (i + 1) % _server->numClients;
-      memcpy(&_peerArray[i].neighbor, &_peerArray[j].client, sizeof (struct sockaddr_in));
-      sendto(_sockfd, &_peerArray[i], sizeof (PeerInfo), 0, (struct sockaddr *) &_peerArray[i].client, sizeof (struct sockaddr_in));
-  }
+	for (i = 0; i < _server->numClients; i++)
+	{
+		j = (i + 1) % _server->numClients;
+		memcpy(&_peerArray[i].neighbor, &_peerArray[j].client, sizeof(struct sockaddr_in));
+		sendto(_sockfd, &_peerArray[i], sizeof(PeerInfo), 0, (struct sockaddr *) &_peerArray[i].client, sizeof(struct sockaddr_in));
+	}
 
 	close(_sockfd);
 }
@@ -194,10 +194,10 @@ int bindSocket(struct addrinfo *res)
 	struct addrinfo *p = NULL;
 
 	// Bind socket
-	for (p = res; p != NULL; p = p->ai_next) 
+	for (p = res; p != NULL; p = p->ai_next)
 	{
 		sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
-		if (sockfd < 0) 
+		if (sockfd < 0)
 		{
 			perror(RED"Server Error: "RESET "Failed to create socket.\n");
 			continue;
@@ -207,15 +207,15 @@ int bindSocket(struct addrinfo *res)
 		int yes = 1;
 		setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
 
-		if (bind(sockfd, res->ai_addr, res->ai_addrlen) < 0) 
-		{   
+		if (bind(sockfd, res->ai_addr, res->ai_addrlen) < 0)
+		{
 			close(sockfd);
 			continue;
 		}
-		break;  
+		break;
 	}
 
-	if (p == NULL) 
+	if (p == NULL)
 		return -1;
 
 	return sockfd;
