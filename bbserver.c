@@ -32,7 +32,7 @@ int main(int argc, char **argv)
 {
 	// Server info
 	int sockfd;
-	PortNT server;
+	ServerInfo server;
 
 	// Check program args
 	verifyInput(argc, argv, &server);
@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 	}
 
 	// Create peer array and run server.
-  PeerT *peerArray = new_parray(&server);
+  PeerInfo *peerArray = createPeerArray(&server);
 
   // Run server
 	runServer(sockfd, peerArray, &server);
@@ -62,7 +62,7 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-void verifyInput(int argc, char **argv, PortNT *PN)
+void verifyInput(int argc, char **argv, ServerInfo *PN)
 {
   if (3 > argc) 
   {
@@ -85,24 +85,24 @@ void verifyInput(int argc, char **argv, PortNT *PN)
   PN->port = port;
 }
 
-/* Creates a new PeerT variable */
-PeerT *new_parray(PortNT *PN) 
+PeerInfo *createPeerArray(ServerInfo *server) 
 {
-  PeerT *PT;
+  PeerInfo *peer;
 
-  PT = malloc(PN->numClients*sizeof(PeerT));
-  if(PT == NULL) 
+  peer = malloc(server->numClients*sizeof(PeerInfo));
+  if(peer == NULL) 
   {
       fprintf(stderr, "Memory allocation failed!\n");
       exit(EXIT_FAILURE);
   }
-  return PT;
+
+  return peer;
 }
 
-int createServer(PortNT *server)
+int createServer(ServerInfo *server)
 {
 	int status, sockfd;
-	struct addrinfo hints, *serverInfo;
+	struct addrinfo hints, *serverAddrInfo;
 	char port[32];
 	sprintf(port, "%d", server->port);
 
@@ -111,14 +111,15 @@ int createServer(PortNT *server)
 	hints.ai_socktype = SOCK_DGRAM;  
 	hints.ai_flags = AI_PASSIVE;     
 
-	if ((status = getaddrinfo(NULL, port, &hints, &serverInfo)) != 0) 
+	//
+	if ((status = getaddrinfo(NULL, port, &hints, &serverAddrInfo)) != 0) 
 	{
 		fprintf(stderr, RED"Server Error: "RESET "getaddrinfo() error = [%s]\n", gai_strerror(status));
 		return ERROR;
 	}
 
-	// Bind
-	if ((sockfd = bindSocket(serverInfo)) < 0)
+	// Bind the socket 
+	if ((sockfd = bindSocket(serverAddrInfo)) < 0)
 	{
 		perror("Error: Failed to bind to socket :");
 		exit(EXIT_FAILURE);
@@ -130,10 +131,10 @@ int createServer(PortNT *server)
 	printf(YELLOW"        Server Information        \n");
 	printf("==================================\n"RESET);
 	printf("Host Address:\t %s\n", hostName);
-	printf("Port        :\t %d\n", ntohs(getPort((struct sockaddr *)serverInfo->ai_addr)));
+	printf("Port        :\t %d\n", ntohs(getPort((struct sockaddr *)serverAddrInfo->ai_addr)));
 	printf(YELLOW"==================================\n"RESET);
 
-	freeaddrinfo(serverInfo);
+	freeaddrinfo(serverAddrInfo);
 
 	return sockfd;
 }
@@ -148,7 +149,7 @@ in_port_t getPort(struct sockaddr *_sa)
 	return (((struct sockaddr_in6*)_sa)->sin6_port);
 }
 
-void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
+void runServer(int _sockfd, PeerInfo *_peerArray, ServerInfo *_server)
 {
 	char buffer[BUFFER_SIZE];
 	char ipAddress[INET_ADDRSTRLEN];
@@ -180,8 +181,8 @@ void runServer(int _sockfd, PeerT *_peerArray, PortNT *_server)
   for (i = 0; i < _server->numClients; i++)
   {
       j = (i + 1) % _server->numClients;
-      memcpy(&_peerArray[i].peer, &_peerArray[j].client, sizeof (struct sockaddr_in));
-      sendto(_sockfd, &_peerArray[i], sizeof (PeerT), 0, (struct sockaddr *) &_peerArray[i].client, sizeof (struct sockaddr_in));
+      memcpy(&_peerArray[i].neighbor, &_peerArray[j].client, sizeof (struct sockaddr_in));
+      sendto(_sockfd, &_peerArray[i], sizeof (PeerInfo), 0, (struct sockaddr *) &_peerArray[i].client, sizeof (struct sockaddr_in));
   }
 
 	close(_sockfd);
