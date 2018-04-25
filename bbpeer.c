@@ -427,14 +427,14 @@ int writeToBulletin()
 	tokenNeeded = true;
 	while (!tokenReady)
 	{
-		printf(YELLOW"Waiting. The token is in use.\n\n");
+		printf(YELLOW"Waiting. The token is in use.\n\n"RESET);
 
 		// Wait for menu access.
 		pthread_cond_wait(&menu_Access, &token_Mutex);
 	}
 	if (DEBUG)
 	{
-		printf(YELLOW"Token received!\n\n");
+		printf(YELLOW"Token received!\n\n"RESET);
 	}
 
 	// We've gained access so open the board.
@@ -485,14 +485,14 @@ int getNumMessages()
 	tokenNeeded = true;
 	while (!tokenReady)
 	{
-		printf(YELLOW"Waiting. The token is in use.\n\n");
+		printf(YELLOW"Waiting. The token is in use.\n\n"RESET);
 
 		// Wait for menu access.
 		pthread_cond_wait(&menu_Access, &token_Mutex);
 	}
 	if (DEBUG)
 	{
-		printf(YELLOW"Token received!\n\n");
+		printf(YELLOW"Token received!\n\n"RESET);
 	}
 
 	// Open file and count messages
@@ -574,14 +574,14 @@ int readFromBulletin()
 	tokenNeeded = true;
 	while (!tokenReady)
 	{
-		printf(YELLOW"Waiting. The token is in use.\n\n");
+		printf(YELLOW"Waiting. The token is in use.\n\n"RESET);
 
 		// Wait for menu access.
 		pthread_cond_wait(&menu_Access, &token_Mutex);
 	}
 	if (DEBUG)
 	{
-		printf(YELLOW"Token received!\n\n");
+		printf(YELLOW"Token received!\n\n"RESET);
 	}
 
 	// Get message requested
@@ -632,14 +632,14 @@ void exitRing()
 	tokenNeeded = true;
 	while (!tokenReady)
 	{
-		printf(YELLOW"Waiting. The token is in use.\n\n");
+		printf(YELLOW"Waiting. The token is in use.\n\n"RESET);
 
 		// Wait for menu access.
 		pthread_cond_wait(&menu_Access, &token_Mutex);
 	}
 	if (DEBUG)
 	{
-		printf(YELLOW"Token received!\n\n");
+		printf(YELLOW"Token received!\n\n"RESET);
 	}
 
 	// Disconnect
@@ -668,14 +668,14 @@ int printAllFromBulletin()
 	tokenNeeded = true;
 	while (!tokenReady)
 	{
-		printf(YELLOW"Waiting. The token is in use.\n\n");
+		printf(YELLOW"Waiting. The token is in use.\n\n"RESET);
 
 		// Wait for menu access.
 		pthread_cond_wait(&menu_Access, &token_Mutex);
 	}
 	if (DEBUG)
 	{
-		printf(YELLOW"Token received!\n\n");
+		printf(YELLOW"Token received!\n\n"RESET);
 	}
 
 	// Get message requested
