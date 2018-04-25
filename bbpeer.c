@@ -114,7 +114,6 @@ int main(int argc, char **argv)
 
 	// Cleanup all data
 	cleanup();
-	free(server);
 
 	return 0;
 }
@@ -131,7 +130,7 @@ void verifyInput(int argc, char **argv)
 	BULLETIN_BOARD = argv[3];
 }
 
-struct addrinfo* getServerInfo(const char *_ipAddress, const f_port)
+struct addrinfo* getServerInfo(const char *_ipAddress, const char *_port)
 {
 	int status;
 	struct addrinfo hints, *res;
