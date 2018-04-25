@@ -346,6 +346,7 @@ void peerExit(TokenRing *_request)
 		sendto(sockfd, _request, sizeof *_request, 0, (struct sockaddr *) &ring.neighbor, sizeof ring.neighbor);
 	}
 	printf(YELLOW"\nA peer has disconnected!\n\n"RESET);
+	fflush(stdout);
 }
 
 void displayMenu()
