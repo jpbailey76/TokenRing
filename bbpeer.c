@@ -26,7 +26,7 @@
 #define RESET "\x1B[0m"
 
 // Server ring struct
-ClientData ring;
+TokenRing ring;
 int sockfd;
 
 // Token & token thread
@@ -202,7 +202,7 @@ void handshake()
 
   // Send address to the peer 
   sendto(sockfd, &ring.client, sizeof ring.client, 0,
-         (struct sockaddr *) &ring.peer, sizeof ring.peer);
+         (struct sockaddr *) &ring.neighbor, sizeof ring.neighbor);
   if(DEBUG)
   {
   	printf(BLUE"Debug: "RESET
@@ -253,7 +253,7 @@ void handshake()
     } 
     else if (comparison > 0) 
     {
-      sendto(sockfd, &peer, sizeof peer, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
+      sendto(sockfd, &peer, sizeof peer, 0, (struct sockaddr *) &ring.neighbor, sizeof ring.neighbor);
     } 
   }
 }
@@ -290,7 +290,7 @@ int compare(struct sockaddr_in *firstPeer, struct sockaddr_in *secondPeer)
 
 void * tokenPassing_Thread(void *arg)
 {
-  ClientData peer;
+  TokenRing peer;
   ssize_t len;
 
   // We're gaining the token, so signal to the menu(main)
@@ -310,7 +310,7 @@ void * tokenPassing_Thread(void *arg)
 	pthread_mutex_unlock(&token_Mutex);
   
   // Pass the token around
-  sendto(sockfd, &TOKEN, sizeof TOKEN, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
+  sendto(sockfd, &TOKEN, sizeof TOKEN, 0, (struct sockaddr *) &ring.neighbor, sizeof ring.neighbor);
   while (connectedToRing) 
   {
     // Wait for token
@@ -318,7 +318,7 @@ void * tokenPassing_Thread(void *arg)
 
     // Check if client is requesting a leave by sending its address
     // or if it's passing the token.
-    if (len == sizeof (ClientData)) 
+    if (len == sizeof (TokenRing)) 
     {
       peerExit(&peer);
     }
@@ -337,30 +337,30 @@ void * tokenPassing_Thread(void *arg)
 			pthread_mutex_unlock(&token_Mutex);
 
 			// We're done using the token so we pass it on.
-      sendto(sockfd, &TOKEN, sizeof TOKEN, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
+      sendto(sockfd, &TOKEN, sizeof TOKEN, 0, (struct sockaddr *) &ring.neighbor, sizeof ring.neighbor);
     }
   }
 
   // Leave the ring.
   printf(YELLOW"You've been disconnected from the ring.\n"RESET);
-  sendto(sockfd, &ring, sizeof ring, 0,(struct sockaddr *) &ring.peer, sizeof ring.peer);
+  sendto(sockfd, &ring, sizeof ring, 0,(struct sockaddr *) &ring.neighbor, sizeof ring.neighbor);
   pthread_exit(SUCCESS);
 }
 
-void peerExit(ClientData *_request)
+void peerExit(TokenRing *_request)
 {
   // Our neighbor is leaving, so send to the peer after them.
-  if (0 == compare(&_request->client, &ring.peer)) 
+  if (0 == compare(&_request->client, &ring.neighbor)) 
   {
     // Swap our neighbor with their neighbor and pass the token
     // to the new neighbor.
-    memcpy(&ring.peer, &_request->peer, sizeof ring.peer);
-    sendto(sockfd, &TOKEN, sizeof TOKEN, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
+    memcpy(&ring.neighbor, &_request->neighbor, sizeof ring.neighbor);
+    sendto(sockfd, &TOKEN, sizeof TOKEN, 0, (struct sockaddr *) &ring.neighbor, sizeof ring.neighbor);
   } 
   else 
   {
   	// Pass around the leave request.
-    sendto(sockfd, _request, sizeof *_request, 0, (struct sockaddr *) &ring.peer, sizeof ring.peer);
+    sendto(sockfd, _request, sizeof *_request, 0, (struct sockaddr *) &ring.neighbor, sizeof ring.neighbor);
   }
 	printf(YELLOW"\nA peer has disconnected!\n\n"RESET);
 }
