@@ -113,7 +113,7 @@ int main(int argc, char **argv)
 	}
 
 	// Cleanup all data
-	cleanup();
+	cleanup(server);
 
 	return 0;
 }
@@ -652,13 +652,14 @@ void exitRing()
 	pthread_mutex_unlock(&token_Mutex);
 }
 
-void cleanup()
+void cleanup(struct addrinfo *server)
 {
 	// Release resources and handle threads.
 	pthread_join(token_Thread, NULL);
 	pthread_cond_destroy(&menu_Access);
 	pthread_cond_destroy(&tokenRing_Access);
 	pthread_mutex_destroy(&token_Mutex);
+	free(server);
 	close(sockfd);
 }
 

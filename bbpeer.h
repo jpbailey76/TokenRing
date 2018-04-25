@@ -118,7 +118,9 @@ void exitRing();
 
 /**
  *	Cleans up any data structures used.
+ *  
+ *  @param server	- addrinfo to be free'd.
  */
-void cleanup();
+void cleanup(struct addrinfo *server);
 
 #endif // BBPEER_H_
