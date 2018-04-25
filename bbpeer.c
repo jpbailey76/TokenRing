@@ -380,25 +380,30 @@ void displayMenu()
 				printf(BLUE"DEBUG: "RESET
 					"inputTok = %s", inputTok);
 			}
-			if(!inputTok)
-				continue;
 
-			if (strcmp(inputTok, "1") == 0)
+			if (inputTok == NULL)
 			{
-				writeToBulletin();
+				printf(YELLOW"\nPlease select an option (1-4)\n"RESET);
 			}
-			else if (strcmp(inputTok, "2") == 0)
+			else
 			{
-				readFromBulletin();
-			}
-			else if (strcmp(inputTok, "3") == 0)
-			{
-				printAllFromBulletin();
-			}
-			else if (strcmp(inputTok, "4") == 0)
-			{
-				exitRing();
-				return;
+				if (strcmp(inputTok, "1") == 0)
+				{
+					writeToBulletin();
+				}
+				else if (strcmp(inputTok, "2") == 0)
+				{
+					readFromBulletin();
+				}
+				else if (strcmp(inputTok, "3") == 0)
+				{
+					printAllFromBulletin();
+				}
+				else if (strcmp(inputTok, "4") == 0)
+				{
+					exitRing();
+					return;
+				}
 			}
 		}
 	}
